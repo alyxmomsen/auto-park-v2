@@ -31,3 +31,21 @@ body {
     text-wrap: balance;
   }
 }
+
+
+/* ==================== */
+
+
+.image-wrapper.flex-container {
+  display: flex ;
+  justify-content: center;
+  gap:9px ;
+  /* flex-direction: ; */
+  border: 1px solid red;
+}
+
+.image-wrapper--flex-container--flex-item {
+
+  flex:1 1 auto ;
+
+}
