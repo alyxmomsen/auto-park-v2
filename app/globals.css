@@ -9,18 +9,29 @@ body {
 }
 
 .regular-container {
-
   background-color: aquamarine;
   color: black;
   padding: 9px;
 }
 
 .dashboard {
-
   border: 1px solid whitesmoke;
   padding: 9px;
 }
 
 a.dashboard__sidebar__controls__item {
   background-color: rgb(106, 71, 26);
+}
+
+button {
+  background-color: #4e6277;
+  padding: 9px;
+  color: whitesmoke;
+}
+
+.filter {
+  width: 500px;
+  height: auto;
+  border: 1px solid yellow;
+  padding: 9px;
 }

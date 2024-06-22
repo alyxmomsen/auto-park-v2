@@ -1,23 +1,19 @@
+import { cookies } from "next/headers";
 
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
 
-import {NextRequest  ,NextResponse} from 'next/server' 
+export default async function my_mw(req: NextRequest, res: NextResponse) {
+  const all_cookies = cookies().getAll();
 
-export default async function my_mw (req:NextRequest , res:NextResponse) {
+  const response = NextResponse.next();
 
-    const all_cookies = cookies().getAll();
-    
-    const response = NextResponse.next();
+  if (req.nextUrl.pathname === "/") {
+    cookies().getAll();
 
-    if(req.nextUrl.pathname === '/') {
+    // cookies().set('foo' , 'bar');
 
-        cookies().getAll();
+    console.log({ message: "hello from the middleware", all_cookies });
+  }
 
-        // cookies().set('foo' , 'bar');
-
-        console.log({message: 'hello from the middleware' ,  all_cookies });
-    }
-
-    return response ;
+  return response;
 }
-

@@ -1,11 +1,8 @@
-
 /**
- * 
- * @param value 
+ *
+ * @param value
  * @returns string
  */
 export function toUpperCase(value: string) {
-    
-    return value.toUpperCase() ;
-
+  return value.toUpperCase();
 }
