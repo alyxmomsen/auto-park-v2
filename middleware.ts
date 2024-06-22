@@ -1,37 +1,21 @@
 
-import jwt from 'jsonwebtoken' ;
-
-// jwt.sign('foo' ,'bar');
+import { cookies } from 'next/headers';
 
 import {NextRequest  ,NextResponse} from 'next/server' 
 
 export default async function my_mw (req:NextRequest , res:NextResponse) {
 
+    const all_cookies = cookies().getAll();
+    
     const response = NextResponse.next();
 
     if(req.nextUrl.pathname === '/') {
 
-        const at = req.cookies.get('access_token') ;
+        cookies().getAll();
 
-        if(at) {
+        // cookies().set('foo' , 'bar');
 
-            console.log('token exist');
-        }
-        else {
-
-            // const token = jwt.sign({foo:'bar'} , 'SECRET_KEY');
-
-            // res.cookies.set('token' , 'token' , {
-
-            //     expires:new Date(Date.now() + 5000)
-            // })
-
-            console.log(res);
-
-            console.log('no token');
-        }
-
-        console.log('hello from the middleware');
+        console.log({message: 'hello from the middleware' ,  all_cookies });
     }
 
     return response ;

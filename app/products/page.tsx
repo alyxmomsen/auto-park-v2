@@ -1,20 +1,30 @@
+// 'use server'
+
 import axios from 'axios';
 import { cookies, headers } from 'next/headers'
 import React from 'react'
+import { Style } from 'util';
+
+const flexContainerStyle = {
+  
+}
+
+const flexItemStyle = {
+  border:'1px solid whitesmoke' ,
+  padding:'9px' ,
+  flex:'0 0 200'
+}
 
 const Products = () => {
+
+  const cks = cookies().getAll();
+
   return (
     <div className={`page-base`}>
-      <div className={`product`}>
-        <MyImage 
-          url='https://i.pinimg.com/564x/22/5e/38/225e387a10c06a4d79e8ccc13de90731.jpg' 
-        />
-        <MyImage 
-          url='https://school.oblakoz.ru/static/media/heart.58d6694822882d2e5d949c258a95f695.svg' 
-        />
+      <div style={{display:'flex' , flexWrap:'wrap' , width:'600px' , border:'1px solid red'}}>
+        {cks.map(elem => <div style={{...flexItemStyle}}><h3>{elem.name}</h3><div>{elem.value}</div></div>)}
       </div>
-        <h1>Products</h1>
-        <div>content</div>
+      hello from products      
     </div>
   )
 }

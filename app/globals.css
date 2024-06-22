@@ -2,50 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: #12171a;
+  color: wheat;
+  display: flex;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.regular-container {
+
+  background-color: aquamarine;
+  color: black;
+  padding: 9px;
 }
 
+.dashboard {
 
-/* ==================== */
-
-
-.image-wrapper.flex-container {
-  display: flex ;
-  justify-content: center;
-  gap:9px ;
-  /* flex-direction: ; */
-  border: 1px solid red;
+  border: 1px solid whitesmoke;
+  padding: 9px;
 }
 
-.image-wrapper--flex-container--flex-item {
-
-  flex:1 1 auto ;
-
+a.dashboard__sidebar__controls__item {
+  background-color: rgb(106, 71, 26);
 }
