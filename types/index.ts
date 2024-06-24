@@ -1,16 +1,11 @@
 export type Brand = 'BMW' | 'EXEED' | 'Geely' | 'Hyundai' | 'Kia' | 'Renault' | 'Toyota';
 
-export const SET_DATA = 'SET_DATA';
-export const RESET_DATA = 'RESET_DATA';
 export const SET_BACKGROUND = 'SET_BACKGROUND';
-export const SET_VEHICLE_MODEL = 'SET_VEHICLE_MODEL';
 export const SET_MODEL = 'SET_MODEL';
+export const SET_BRAND = 'SET_BRAND';
+export const SET_BRAND_AS_SINGLE = 'SET_BRAND_SINGLE';
 
 export type Action =
-	| {
-			type: typeof RESET_DATA;
-			payload: undefined;
-	  }
 	| {
 			type: typeof SET_BACKGROUND;
 			payload: '#686';
@@ -21,4 +16,12 @@ export type Action =
 				brand: Brand;
 				model: string;
 			};
+	  }
+	| {
+			type: typeof SET_BRAND;
+			payload: Brand;
+	  }
+	| {
+			type: typeof SET_BRAND_AS_SINGLE;
+			payload: Brand;
 	  };

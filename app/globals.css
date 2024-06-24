@@ -48,12 +48,11 @@ button {
 
 .filter__item__brand {
 	cursor: pointer;
-	color: gray;
+	color: ghostwhite;
 }
 
-.filter__item__brand--choisen {
-	cursor: pointer;
-	color: ghostwhite;
+.filter__item__brand.--disabled {
+	color: gray;
 }
 
 .filter__item__models__model {

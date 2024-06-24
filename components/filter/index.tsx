@@ -1,6 +1,6 @@
-import { setModel } from '@/action-creators';
+import { setBrand, setBrandAsSingle, setModel } from '@/action-creators';
 import { mainContext, VehiclesState } from '@/app/app/page';
-import { Brand } from '@/types';
+import { Action, Brand } from '@/types';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -40,31 +40,31 @@ const filterModel = {
 	},
 };
 
-type FilterModel = /* typeof filterModel */{
-    result: number;
-    brands: {
-        name: string;
-        code: string;
-        values: string[];
-    };
-    models: {
-        name: string;
-        type: string;
-        values: {
-            brand: Brand;
-            models: string[];
-        }[];
-    };
-    tarif: {
-        name: string;
-        type: string;
-        values: {
-            '13': string;
-            '14': string;
-            '22': string;
-            '26': string;
-        };
-    };
+type FilterModel = /* typeof filterModel */ {
+	result: number;
+	brands: {
+		name: string;
+		code: string;
+		values: string[];
+	};
+	models: {
+		name: string;
+		type: string;
+		values: {
+			brand: Brand;
+			models: string[];
+		}[];
+	};
+	tarif: {
+		name: string;
+		type: string;
+		values: {
+			'13': string;
+			'14': string;
+			'22': string;
+			'26': string;
+		};
+	};
 };
 
 const Filter = () => {
@@ -130,24 +130,27 @@ function FilterItem({
 		models: string[];
 	};
 }) {
-	const [isChoisen, setIsChoisen] = useState(state);
-
-	useEffect(() => setIsChoisen(state), [state]);
+  const ctx = useContext(mainContext);
+  const { brands , models } = ctx.model.filterInstance;
 
 	return (
-		<div className={`filter__item${isChoisen ? `--choisen` : ''}`}>
+		<div
+			className='filter__item'
+		>
 			<h2
-				className={`filter__item__brand${isChoisen ? '--choisen' : ''}`}
-				onClick={() => setIsChoisen((currentState) => !currentState)}
+				className={`filter__item__brand${!/* ctx.model.filterInstance.brands */brands.length ? `` : !/* ctx.model.filterInstance.brands */brands.includes(item.brand) ? '--disabled' : ''}`}
+				onClick={() => {
+					if (ctx.controller.dispatch) {
+						ctx.controller.dispatch(setBrand({ brand: item.brand }));
+					}
+				}}
 			>
-				<input onChange={(f) => f} checked={isChoisen ? true : false} type='checkbox' />
+				<input onChange={(f) => f} checked={false ? true : false} type='checkbox' />
 				brand: {item.brand}
 			</h2>
 			<div className={`filter__item__models`}>
 				{item.models.map((model, i) => {
-					return (
-						<FilterItemChild key={i} modelname={model} isParentChoisen={isChoisen} brandname={item.brand} />
-					);
+					return <FilterItemChild key={i} modelname={model} isParentChoisen={false} brandname={item.brand} />;
 				})}
 			</div>
 		</div>

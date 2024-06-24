@@ -1,7 +1,7 @@
 'use client';
 
 import React, { act, createContext, useEffect, useReducer, useState } from 'react';
-import { Action, Brand, RESET_DATA, SET_BACKGROUND, SET_MODEL } from '@/types';
+import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL } from '@/types';
 import Filter from '@/components/filter';
 
 type VehicleModel =
@@ -54,7 +54,6 @@ const filterInstance: {
 		Renault: 'Logan'[];
 		Toyota: 'Camry'[];
 	};
-
 	brands: string[];
 } = {
 	models: {
@@ -94,8 +93,6 @@ const initialState: MainState = {
 
 const mainReducer = (state: MainState, action: Action): MainState => {
 	switch (action.type) {
-		case RESET_DATA:
-			return state;
 		case SET_BACKGROUND:
 			return state;
 		case SET_MODEL:
@@ -110,6 +107,28 @@ const mainReducer = (state: MainState, action: Action): MainState => {
 							action.payload.model,
 						],
 					},
+				},
+			};
+		case SET_BRAND:
+			return {
+				...state,
+				filterInstance: {
+					...state.filterInstance,
+					brands: [
+						...(!state.filterInstance.brands.length
+							? [action.payload]
+							: state.filterInstance.brands.includes(action.payload)
+								? [...state.filterInstance.brands.filter((elem) => elem !== action.payload)]
+								: [...state.filterInstance.brands, action.payload]),
+					],
+				},
+			};
+		case SET_BRAND_AS_SINGLE:
+			return {
+				...state,
+				filterInstance: {
+					...state.filterInstance,
+					brands: [action.payload],
 				},
 			};
 		default:
@@ -136,7 +155,7 @@ const App = () => {
 	const [textInputValue, setTextInputValue] = useState('');
 
 	useEffect(() => {
-		console.log(state);
+		console.log(state.filterInstance);
 	}, [state]);
 
 	return (
