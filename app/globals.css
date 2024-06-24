@@ -3,35 +3,83 @@
 @tailwind utilities;
 
 body {
-  background-color: #12171a;
-  color: wheat;
-  display: flex;
+	background-color: #12171a;
+	color: wheat;
+	display: flex;
 }
 
 .regular-container {
-  background-color: aquamarine;
-  color: black;
-  padding: 9px;
+	background-color: #272e2b;
+	color: #8fb7a6;
+	padding: 9px;
 }
 
 .dashboard {
-  border: 1px solid whitesmoke;
-  padding: 9px;
+	border: 1px solid whitesmoke;
+	padding: 9px;
 }
 
 a.dashboard__sidebar__controls__item {
-  background-color: rgb(106, 71, 26);
+	background-color: rgb(106, 71, 26);
 }
 
 button {
-  background-color: #4e6277;
-  padding: 9px;
-  color: whitesmoke;
+	background-color: #4e6277;
+	padding: 9px;
+	color: whitesmoke;
 }
 
 .filter {
-  width: 500px;
-  height: auto;
-  border: 1px solid yellow;
-  padding: 9px;
+	/* width: 500px; */
+	height: auto;
+	border: 1px solid #3b5047;
+	padding: 9px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+}
+
+.filter__item {
+	/* border: 1px solid red; */
+	display: flex;
+	flex-direction: column;
+}
+
+.filter__item__brand {
+	cursor: pointer;
+	color: gray;
+}
+
+.filter__item__brand--choisen {
+	cursor: pointer;
+	color: ghostwhite;
+}
+
+.filter__item__models__model {
+	display: flex;
+}
+
+.filter__item__subitem {
+}
+
+.preloader--basic {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: #12171a;
+	width: 100%;
+	height: 100%;
+	color: wheat;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.filter__item__models__item {
+	color: ghostwhite;
+	cursor: pointer;
+}
+
+.filter__item__models__item.--disabled {
 }

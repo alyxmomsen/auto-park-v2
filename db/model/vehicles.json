@@ -1,24 +1,18 @@
 {
-  "vehicles": {
-    "BMW": ["X2", "X5"],
-    "Chery": [
-      "Arrizo 8",
-      "Tiggo 4",
-      "Tiggo 7 Pro",
-      "Tiggo 7 Pro Max",
-      "Tiggo 8 Pro Max"
-    ],
-    "EXEED": ["LX", "TXL", "VX"],
-    "Geely": ["Coolray"],
-    "Hyundai": ["Sonata"],
-    "Kia": ["K5", "Optima", "Rio"],
-    "Renault": ["Logan"],
-    "Toyota": ["Camry"]
-  },
-  "tariffes": [
-    { "code": "13", "title": "Комфорт+" },
-    { "code": "14", "title": "Комфорт" },
-    { "code": "22", "title": "Комфорт 2" },
-    { "code": "26", "title": "Комфорт 3" }
-  ]
+	"vehicles": {
+		"BMW": ["X2", "X5"],
+		"Chery": ["Arrizo 8", "Tiggo 4", "Tiggo 7 Pro", "Tiggo 7 Pro Max", "Tiggo 8 Pro Max"],
+		"EXEED": ["LX", "TXL", "VX"],
+		"Geely": ["Coolray"],
+		"Hyundai": ["Sonata"],
+		"Kia": ["K5", "Optima", "Rio"],
+		"Renault": ["Logan"],
+		"Toyota": ["Camry"]
+	},
+	"tariffes": [
+		{ "code": "13", "title": "Комфорт+" },
+		{ "code": "14", "title": "Комфорт" },
+		{ "code": "22", "title": "Комфорт 2" },
+		{ "code": "26", "title": "Комфорт 3" }
+	]
 }
