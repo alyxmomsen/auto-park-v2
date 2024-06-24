@@ -48,11 +48,16 @@ button {
 
 .filter__item__brand {
 	cursor: pointer;
-	color: ghostwhite;
+	color: black;
+	background-color: ghostwhite;
+	display: flex;
+	gap: 9px;
+	padding: 3px 9px;
 }
 
 .filter__item__brand.--disabled {
 	color: gray;
+	background-color: #3b5047;
 }
 
 .filter__item__models__model {
@@ -78,7 +83,19 @@ button {
 .filter__item__models__item {
 	color: ghostwhite;
 	cursor: pointer;
+	transition: all 0.2s ease-out;
+}
+
+.filter__item__models__item:hover {
+	background-color: #8fb7a6;
 }
 
 .filter__item__models__item.--disabled {
+	color: #3b5047;
+	cursor: auto;
+	background-color: inherit;
+}
+
+.filter__item__models__item.--disabled:hover {
+	background-color: inherit;
 }
