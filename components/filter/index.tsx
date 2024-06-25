@@ -188,6 +188,10 @@ function FilterItemChilds({
 	const m = modelname;
 	const { brand, models } = m;
 
+	const ctx = useContext(mainContext);
+
+	const { dispatch } = ctx.controller;
+
 	useEffect(() => {
 		if (!isParentChoisen) {
 			setState(isParentChoisen);
@@ -197,7 +201,10 @@ function FilterItemChilds({
 	return (
 		<>
 			{models.map((elem) => (
-				<div className={`filter__item__models__item${isDisabled ? ' --disabled' : ''}`}>
+				<div onClick={() => ctx.controller.dispatch ? ctx.controller.dispatch(setModel({brand:brand as Brand , model:elem})) : null } className={`filter__item__models__item${isDisabled ? ' --disabled' : ''}`}>
+					{ 
+						ctx.model.filterInstance.models[brand].find(modelFromState => elem.includes(modelFromState)) && 'okay'
+					}
 					<CustomCheckBox initState={state} dependency={isParentChoisen} />
 					{elem}
 				</div>

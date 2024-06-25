@@ -92,6 +92,7 @@ const initialState: MainState = {
 };
 
 const mainReducer = (state: MainState, action: Action): MainState => {
+
 	switch (action.type) {
 		case SET_BACKGROUND:
 			return state;
@@ -102,10 +103,10 @@ const mainReducer = (state: MainState, action: Action): MainState => {
 					...state.filterInstance,
 					models: {
 						...state.filterInstance.models,
-						[action.payload.brand]: [
+						[action.payload.brand]: (!state.filterInstance.models[action.payload.brand].find(elem => elem === action.payload.model) ? [
 							...state.filterInstance.models[action.payload.brand],
 							action.payload.model,
-						],
+						] : [...state.filterInstance.models[action.payload.brand].filter(elem => elem !== action.payload.model)]),
 					},
 				},
 			};
