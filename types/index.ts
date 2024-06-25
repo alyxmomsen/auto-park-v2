@@ -10,6 +10,16 @@ export type Model =
 	| { Renault: 'Logan'[] }
 	| { Toyota: 'Camry'[] };
 
+export type ModelsAsIs=
+	| { brand: 'BMW'; models: ('X2' | 'X5')[] }
+	| { brand: 'Chery'; models: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[] }
+	| { brand: 'EXEED'; models: ('LX' | 'TXL' | 'VX')[] }
+	| { brand: 'Geely'; models: 'Coolray'[] }
+	| { brand: 'Hyundai'; models: 'Sonata'[] }
+	| { brand: 'Kia'; models: ('K5' | 'Optima' | 'Rio')[] }
+	| { brand: 'Renault'; models: 'Logan'[] }
+	| { brand: 'Toyota'; models: 'Camry'[] };
+
 export const SET_BACKGROUND = 'SET_BACKGROUND';
 export const SET_MODEL = 'SET_MODEL';
 export const SET_BRAND = 'SET_BRAND';

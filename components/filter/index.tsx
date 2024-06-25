@@ -1,6 +1,6 @@
 import { setBrand, setBrandAsSingle, setModel } from '@/action-creators';
 import { mainContext, VehiclesState } from '@/app/app/page';
-import { Action, Brand, Model } from '@/types';
+import { Action, Brand, Model, ModelsAsIs } from '@/types';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -50,10 +50,11 @@ type FilterModel = /* typeof filterModel */ {
 	models: {
 		name: string;
 		type: string;
-		values: {
-			brand: Brand;
-			models: /* string */ Model[];
-		}[];
+		// values: {
+		// 	brand: Brand;
+		// 	models:Model[];
+		// }[];
+		values: ModelsAsIs[];
 	};
 	tarif: {
 		name: string;
@@ -120,44 +121,39 @@ function useAxios(url: string) {
 	};
 }
 
-function FilterItem({
-	state = true,
-	item,
-}: {
-	state?: boolean;
-	item: {
-		brand: Brand;
-		models: Model[];
-	};
-}) {
+function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs }) {
 	const ctx = useContext(mainContext);
 	const { brands, models } = ctx.model.filterInstance;
 
-	const mdls = brands.map((elem) => models[elem as Brand].map((elem) => elem));
+	const pn = Object.getOwnPropertyNames(item);
 
-	mdls.find((elem) => elem.includes('Camry'));
+	// const mdls = brands.map((elem) => models[elem as Brand].map((elem) => elem));
 
-  
+	// mdls.find((elem) => elem.includes('Camry'));
+
+	const m: Model = { BMW: ['X2', 'X5'] };
+
+	m.BMW;
 
 	return (
 		<div className='filter__item'>
 			<h2
 				className={`filter__item__brand${!brands.length ? `` : !brands.includes(item.brand) ? ' --disabled' : ''}`}
-				onClick={() => {
-					if (ctx.controller.dispatch) {
-						ctx.controller.dispatch(setBrand({ brand: item.brand }));
-					}
-				}}
+				// onClick={() => {
+				// 	if (ctx.controller.dispatch) {
+				// 		ctx.controller.dispatch(setBrand({ brand: item.brand }));
+				// 	}
+				// }}
 			>
 				<input onChange={(f) => f} checked={false ? true : false} type='checkbox' />
 				brand: {item.brand}
-      </h2>
-      
+			</h2>
+
 			<div className={`filter__item__models`}>
-        {item.models.map((model, i) => {
+				{/* {item.models.map((model, i) => {
           
 					return (
-						<FilterItemChild
+						<FilterItemChilds
 							key={i}
 							modelname={model}
 							isParentChoisen={false}
@@ -165,31 +161,32 @@ function FilterItem({
 							isDisabled={!brands.length ? false : true}
 						/>
 					);
-				})}
+				})} */}
+				<FilterItemChilds
+					modelname={item}
+					isParentChoisen={false}
+					/* brandname={item.brand } */ isDisabled={!brands.length ? false : true}
+				/>
 			</div>
 		</div>
 	);
 }
 
-function FilterItemChild({
+function FilterItemChilds({
 	modelname,
 	isParentChoisen,
-	brandname,
+	// brandname,
 	isDisabled,
 }: {
 	isParentChoisen: boolean;
-	modelname: Model;
-	brandname: Brand;
+	modelname: ModelsAsIs;
+	// brandname: Brand;
 	isDisabled: boolean;
 }) {
 	const [state, setState] = useState(false);
 
-	const model = modelname as Model;
-
-  // model['']
-
-	console.log(model);
-	const ctx = useContext(mainContext);
+	const m = modelname;
+	const { brand, models } = m;
 
 	useEffect(() => {
 		if (!isParentChoisen) {
@@ -198,10 +195,14 @@ function FilterItemChild({
 	}, [isParentChoisen]);
 
 	return (
-		<div className={`filter__item__models__item${isDisabled ? ' --disabled' : ''}`}>
-			<CustomCheckBox initState={state} dependency={isParentChoisen} />
-			{model}
-		</div>
+		<>
+			{models.map((elem) => (
+				<div className={`filter__item__models__item${isDisabled ? ' --disabled' : ''}`}>
+					<CustomCheckBox initState={state} dependency={isParentChoisen} />
+					{elem}
+				</div>
+			))}
+		</>
 	);
 }
 
@@ -221,3 +222,38 @@ function CustomCheckBox({ initState, dependency }: { initState: boolean; depende
 		/>
 	);
 }
+
+// function modelsGetter(brand: Brand , models:ModelsAsIs):ModelsAsIs {
+// 	switch (brand) {
+// 		case 'BMW':
+
+// 			const model: ModelsAsIs = {
+// 				brand:'BMW' ,
+// 				models:
+// 			}
+			
+// 			return {
+// 				brand: 'BMW',
+// 				models:
+// 			}
+// 		case 'EXEED':
+// 		case 'Geely':
+// 		case 'Hyundai':
+// 		case 'Kia':
+// 		case 'Renault':
+// 		case 'Toyota':
+
+// 	}
+// }
+
+// { brand: 'BMW'; models: ('X2' | 'X5')[] }
+// 	| { brand: 'Chery'; models: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[] }
+// 	| { brand: 'EXEED'; models: ('LX' | 'TXL' | 'VX')[] }
+// 	| { brand: 'Geely'; models: 'Coolray'[] }
+// 	| { brand: 'Hyundai'; models: 'Sonata'[] }
+// 	| { brand: 'Kia'; models: ('K5' | 'Optima' | 'Rio')[] }
+// 	| { brand: 'Renault'; models: 'Logan'[] }
+// 		| { brand: 'Toyota'; models: 'Camry'[] };
+	
+
+		// type Model<T> = ReturnType<typeof Mode>

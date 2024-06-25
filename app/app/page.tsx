@@ -70,9 +70,9 @@ const filterInstance: {
 };
 
 interface MainState {
-	filter: {
-		vehicles: VehiclesState;
-	};
+	// filter: {
+	// 	vehicles: VehiclesState;
+	// };
 	background: {
 		color: string;
 	};
@@ -80,11 +80,11 @@ interface MainState {
 }
 
 const initialState: MainState = {
-	filter: {
-		vehicles: {
-			BMW: ['X2'],
-		},
-	},
+	// filter: {
+	// 	vehicles: {
+	// 		BMW: ['X2'],
+	// 	},
+	// },
 	background: {
 		color: '',
 	},
