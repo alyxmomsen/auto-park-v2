@@ -138,13 +138,12 @@ function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs 
 				<input onChange={(f) => f} checked={false ? true : false} type='checkbox' />
 				brand: {item.brand}
 			</h2>
-			<div className={`filter__item__models`}>
+			{ (brands.includes(item.brand) || !brands.length) && <div className={`filter__item__models`}>
 				<FilterItemChilds
 					modelname={item}
 					isParentChoisen={false}
-					/* brandname={item.brand } */ isDisabled={!brands.length ? false : true}
 				/>
-			</div>
+			</div> }
 		</div>
 	);
 }
@@ -152,13 +151,9 @@ function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs 
 function FilterItemChilds({
 	modelname,
 	isParentChoisen,
-	// brandname,
-	isDisabled,
 }: {
 	isParentChoisen: boolean;
 	modelname: ModelsAsIs;
-	// brandname: Brand;
-	isDisabled: boolean;
 }) {
 	const [state, setState] = useState(false);
 
@@ -178,7 +173,7 @@ function FilterItemChilds({
 	return (
 		<>
 			{models.map((elem) => (
-				<div onClick={() => ctx.controller.dispatch ? ctx.controller.dispatch(setModel({brand:brand as Brand , model:elem})) : null } className={`filter__item__models__item${isDisabled ? ' --disabled' : ''}`}>
+				<div onClick={() => ctx.controller.dispatch ? ctx.controller.dispatch(setModel({brand:brand as Brand , model:elem})) : null } className={`filter__item__models__item${true ? ' --disabled' : ''}`}>
 					{ 
 						ctx.model.filterInstance.models[brand].find(modelFromState => modelFromState === elem) && 'okay'
 					}
