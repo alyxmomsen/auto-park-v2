@@ -123,45 +123,22 @@ function useAxios(url: string) {
 
 function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs }) {
 	const ctx = useContext(mainContext);
-	const { brands, models } = ctx.model.filterInstance;
-
-	const pn = Object.getOwnPropertyNames(item);
-
-	// const mdls = brands.map((elem) => models[elem as Brand].map((elem) => elem));
-
-	// mdls.find((elem) => elem.includes('Camry'));
-
-	const m: Model = { BMW: ['X2', 'X5'] };
-
-	m.BMW;
+	const { brands } = ctx.model.filterInstance;
 
 	return (
 		<div className='filter__item'>
 			<h2
 				className={`filter__item__brand${!brands.length ? `` : !brands.includes(item.brand) ? ' --disabled' : ''}`}
-				// onClick={() => {
-				// 	if (ctx.controller.dispatch) {
-				// 		ctx.controller.dispatch(setBrand({ brand: item.brand }));
-				// 	}
-				// }}
+				onClick={() => {
+					if (ctx.controller.dispatch) {
+						ctx.controller.dispatch(setBrand({ brand: item.brand as Brand }));
+					}
+				}}
 			>
 				<input onChange={(f) => f} checked={false ? true : false} type='checkbox' />
 				brand: {item.brand}
 			</h2>
-
 			<div className={`filter__item__models`}>
-				{/* {item.models.map((model, i) => {
-          
-					return (
-						<FilterItemChilds
-							key={i}
-							modelname={model}
-							isParentChoisen={false}
-							brandname={item.brand}
-							isDisabled={!brands.length ? false : true}
-						/>
-					);
-				})} */}
 				<FilterItemChilds
 					modelname={item}
 					isParentChoisen={false}
@@ -203,7 +180,7 @@ function FilterItemChilds({
 			{models.map((elem) => (
 				<div onClick={() => ctx.controller.dispatch ? ctx.controller.dispatch(setModel({brand:brand as Brand , model:elem})) : null } className={`filter__item__models__item${isDisabled ? ' --disabled' : ''}`}>
 					{ 
-						ctx.model.filterInstance.models[brand].find(modelFromState => elem.includes(modelFromState)) && 'okay'
+						ctx.model.filterInstance.models[brand].find(modelFromState => modelFromState === elem) && 'okay'
 					}
 					<CustomCheckBox initState={state} dependency={isParentChoisen} />
 					{elem}
