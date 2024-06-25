@@ -10,14 +10,16 @@ const Catalogue = ({ content }: { content: Catalogmodel }) => {
 			</h2>
 			<div className='catalogue__content__items'>
 				{content.list.map((card, i) => (
-                    <Link href={'/app/' + card.id} className={'catalogue-card'} ><div key={i}>
-						<div>model: {card.model}</div>
-						<div>
-							<Suspense fallback={<div>loading...</div>}>
-								<img /* width={200} height={200} */ alt='alt data' src={card.image} />
-							</Suspense>
+					<Link href={'/app/' + card.id} className={'catalogue-card'}>
+						<div key={i}>
+							<div>model: {card.model}</div>
+							<div>
+								<Suspense fallback={<div>loading...</div>}>
+									<img /* width={200} height={200} */ alt='alt data' src={card.image} />
+								</Suspense>
+							</div>
 						</div>
-					</div></Link>
+					</Link>
 				))}
 			</div>
 		</>

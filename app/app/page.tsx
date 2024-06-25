@@ -1,38 +1,10 @@
 'use client';
 
 import React, { act, createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL } from '@/types';
+import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF } from '@/types';
 import Filter from '@/components/filter';
 import axios from 'axios';
 import Catalogue from '@/components/catalogue';
-
-type VehicleModel =
-	| { brand: 'BMW'; models: ('m1' | 'm2' | 'm3')[] }
-	| { brand: 'Audi'; models: ('a1' | 'a2' | 'a3')[] };
-
-// interface iVehicle {
-//     brand: string;
-//     models: string[];
-// }
-
-type BrandConfig =
-	| { brand: 'BMW'; models: ('X2' | 'X5')[] }
-	| {
-			brand: 'Chery';
-			models: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[];
-	  }
-	| { brand: 'BMW'; models: ('X2' | 'X5')[] };
-
-class Vehicle /*  implements iVehicle */ {
-	brand: Brand;
-	models: string[];
-	constructor(brandConfig: BrandConfig) {
-		this.brand = brandConfig.brand as Brand;
-		this.models = brandConfig.models;
-	}
-}
-
-// const v = new Vehicle();
 
 export interface VehiclesState {
 	BMW?: ('X2' | 'X5')[];
@@ -44,6 +16,8 @@ export interface VehiclesState {
 	Renault?: 'Logan'[];
 	Toyota?: 'Camry'[];
 }
+
+// export interface
 
 const filterInstance: {
 	models: {
@@ -57,6 +31,12 @@ const filterInstance: {
 		Toyota: 'Camry'[];
 	};
 	brands: string[];
+	tariffs: (
+		| { code: '13'; name: 'Комфорт+' }
+		| { code: '14'; name: 'Комфорт' }
+		| { code: '22'; name: 'Комфорт2' }
+		| { code: '26'; name: 'Комфорт3' }
+	)[];
 } = {
 	models: {
 		BMW: [],
@@ -69,12 +49,10 @@ const filterInstance: {
 		Toyota: [],
 	},
 	brands: [],
+	tariffs: [],
 };
 
 interface MainState {
-	// filter: {
-	// 	vehicles: VehiclesState;
-	// };
 	background: {
 		color: string;
 	};
@@ -82,11 +60,6 @@ interface MainState {
 }
 
 const initialState: MainState = {
-	// filter: {
-	// 	vehicles: {
-	// 		BMW: ['X2'],
-	// 	},
-	// },
 	background: {
 		color: '',
 	},
@@ -138,20 +111,30 @@ const mainReducer = (state: MainState, action: Action): MainState => {
 					brands: [action.payload],
 				},
 			};
+		case SET_TARIFF:
+			return {
+				...state,
+				filterInstance: {
+					...state.filterInstance,
+					tariffs: [
+						/* ...action.payload */
+					],
+				},
+			};
 		default:
 			return state;
 	}
 };
 
 interface ContextModel {
-	controller: {
+	service: {
 		dispatch: React.Dispatch<Action> | null;
 	};
 	model: MainState;
 }
 
 export const mainContext = createContext<ContextModel>({
-	controller: {
+	service: {
 		dispatch: null,
 	},
 	model: initialState,
@@ -162,9 +145,8 @@ const App = () => {
 	const [queryParams, setQueryParams] = useState('');
 
 	const { data } = useGetCatalog(queryParams);
-	// useEffect(() => {
-	// 	console.log(state.filterInstance);
-	// }, [state]);
+
+	console.log({ state });
 
 	useEffect(() => {
 		console.log({ data });
@@ -198,7 +180,7 @@ const App = () => {
 		<mainContext.Provider
 			value={{
 				model: state,
-				controller: {
+				service: {
 					dispatch,
 				},
 			}}

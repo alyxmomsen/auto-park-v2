@@ -1,14 +1,38 @@
 export type Brand = 'BMW' | 'EXEED' | 'Geely' | 'Hyundai' | 'Kia' | 'Renault' | 'Toyota';
 
-export type Model =
-	| { BMW: ('X2' | 'X5')[] }
-	| { Chery: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[] }
-	| { EXEED: ('LX' | 'TXL' | 'VX')[] }
-	| { Geely: 'Coolray'[] }
-	| { Hyundai: 'Sonata'[] }
-	| { Kia: ('K5' | 'Optima' | 'Rio')[] }
-	| { Renault: 'Logan'[] }
-	| { Toyota: 'Camry'[] };
+export type Tariff =
+	| { code: '13'; name: 'Комфорт+' }
+	| { code: '14'; name: 'Комфорт' }
+	| { code: '22'; name: 'Комфорт2' }
+	| { code: '26'; name: 'Комфорт3' };
+
+export function tariffFabric(code: TarifCode): Tariff {
+	switch (code) {
+		case '13':
+			return {
+				code,
+				name: 'Комфорт+',
+			};
+		case '14':
+			return {
+				code,
+				name: 'Комфорт',
+			};
+		case '22':
+			return {
+				code,
+				name: 'Комфорт2',
+			};
+		case '26':
+			return {
+				code,
+				name: 'Комфорт3',
+			};
+	}
+}
+
+export type TarifCode = '13' | '14' | '22' | '26';
+export type TarifName = 'Комфорт' | 'Комфорт' | 'Комфорт2' | 'Комфорт3';
 
 export type ModelsAsIs =
 	| { brand: 'BMW'; models: ('X2' | 'X5')[] }
@@ -24,6 +48,7 @@ export const SET_BACKGROUND = 'SET_BACKGROUND';
 export const SET_MODEL = 'SET_MODEL';
 export const SET_BRAND = 'SET_BRAND';
 export const SET_BRAND_AS_SINGLE = 'SET_BRAND_SINGLE';
+export const SET_TARIFF = 'SET_SET_TARIFF';
 
 export type Action =
 	| {
@@ -44,4 +69,8 @@ export type Action =
 	| {
 			type: typeof SET_BRAND_AS_SINGLE;
 			payload: Brand;
+	  }
+	| {
+			type: typeof SET_TARIFF;
+			payload: Tariff;
 	  };

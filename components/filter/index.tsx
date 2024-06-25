@@ -1,6 +1,6 @@
 import { setBrand, setBrandAsSingle, setModel } from '@/action-creators';
 import { mainContext, VehiclesState } from '@/app/app/page';
-import { Action, Brand, Model, ModelsAsIs } from '@/types';
+import { Action, Brand, /* Model, */ ModelsAsIs, TarifCode, tariffFabric } from '@/types';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -50,10 +50,6 @@ type FilterModel = /* typeof filterModel */ {
 	models: {
 		name: string;
 		type: string;
-		// values: {
-		// 	brand: Brand;
-		// 	models:Model[];
-		// }[];
 		values: ModelsAsIs[];
 	};
 	tarif: {
@@ -81,10 +77,18 @@ const Filter = () => {
 
 	return (
 		<div className='filter'>
-			<h2>filter</h2>
-			{(started && !finished && <div className='preloader--basic'>loading...</div>) || (
-				<>{filter?.models.values.map((elem, i) => <FilterItem key={i} item={elem} />)}</>
-			)}
+			<div className='filter__tariff-options'>
+				{filter
+					? Object.getOwnPropertyNames(filter.tarif.values).map((elem) => (
+							<div>{tariffFabric(elem as TarifCode).name}</div>
+						))
+					: null}
+			</div>
+			<div className='filter__basic-options'>
+				{(started && !finished && <div className='preloader--basic'>loading...</div>) || (
+					<>{filter?.models.values.map((elem, i) => <FilterItem key={i} item={elem} />)}</>
+				)}
+			</div>
 		</div>
 	);
 };
@@ -100,8 +104,8 @@ function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs 
 			<h2
 				className={`filter__item__brand${!brands.length ? `` : !brands.includes(item.brand) ? ' --disabled' : ''}`}
 				onClick={() => {
-					if (ctx.controller.dispatch) {
-						ctx.controller.dispatch(setBrand({ brand: item.brand as Brand }));
+					if (ctx.service.dispatch) {
+						ctx.service.dispatch(setBrand({ brand: item.brand as Brand }));
 					}
 				}}
 			>
@@ -125,7 +129,7 @@ function FilterItemChilds({ modelname, isParentChoisen }: { isParentChoisen: boo
 
 	const ctx = useContext(mainContext);
 
-	const { dispatch } = ctx.controller;
+	const { dispatch } = ctx.service;
 
 	useEffect(() => {
 		if (!isParentChoisen) {
@@ -139,8 +143,8 @@ function FilterItemChilds({ modelname, isParentChoisen }: { isParentChoisen: boo
 				<div
 					key={i}
 					onClick={() =>
-						ctx.controller.dispatch
-							? ctx.controller.dispatch(setModel({ brand: brand as Brand, model: elem }))
+						ctx.service.dispatch
+							? ctx.service.dispatch(setModel({ brand: brand as Brand, model: elem }))
 							: null
 					}
 					className={`filter__item__models__item${true ? ' --disabled' : ''}`}
@@ -200,3 +204,7 @@ function useAxios(url: string) {
 		finished,
 	};
 }
+
+type x = Extract<ModelsAsIs, {brand:'BMW'}>
+
+type m = keyof ModelsAsIs
