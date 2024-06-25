@@ -99,3 +99,38 @@ button {
 .filter__item__models__item.--disabled:hover {
 	background-color: inherit;
 }
+
+.catalogue {
+	display: flex;
+	width: 100%;
+	/* justify-content: ; */
+}
+
+.catalogue__sidebar--left {
+	width: 333px;
+	flex-basis: 333px;
+	flex-grow: 0;
+}
+
+.catalogue__content {
+	padding: 9px;
+	border: 2px solid salmon;
+	flex-basis: 200px;
+	flex-grow: 1;
+}
+
+.catalogue__preloader {
+	padding: 9px;
+	border: 2px solid salmon;
+}
+
+.catalogue__content__items {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.catalogue-card {
+	flex-basis: 300px;
+	flex-shrink: 0;
+	flex-grow: 1;
+}

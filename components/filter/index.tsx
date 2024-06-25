@@ -91,6 +91,86 @@ const Filter = () => {
 
 export default Filter;
 
+function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs }) {
+	const ctx = useContext(mainContext);
+	const { brands } = ctx.model.filterInstance;
+
+	return (
+		<div className='filter__item'>
+			<h2
+				className={`filter__item__brand${!brands.length ? `` : !brands.includes(item.brand) ? ' --disabled' : ''}`}
+				onClick={() => {
+					if (ctx.controller.dispatch) {
+						ctx.controller.dispatch(setBrand({ brand: item.brand as Brand }));
+					}
+				}}
+			>
+				<input onChange={(f) => f} checked={false ? true : false} type='checkbox' />
+				brand: {item.brand}
+			</h2>
+			{(brands.includes(item.brand) || !brands.length) && (
+				<div className={`filter__item__models`}>
+					<FilterItemChilds modelname={item} isParentChoisen={false} />
+				</div>
+			)}
+		</div>
+	);
+}
+
+function FilterItemChilds({ modelname, isParentChoisen }: { isParentChoisen: boolean; modelname: ModelsAsIs }) {
+	const [state, setState] = useState(false);
+
+	const m = modelname;
+	const { brand, models } = m;
+
+	const ctx = useContext(mainContext);
+
+	const { dispatch } = ctx.controller;
+
+	useEffect(() => {
+		if (!isParentChoisen) {
+			setState(isParentChoisen);
+		}
+	}, [isParentChoisen]);
+
+	return (
+		<>
+			{models.map((elem, i) => (
+				<div
+					key={i}
+					onClick={() =>
+						ctx.controller.dispatch
+							? ctx.controller.dispatch(setModel({ brand: brand as Brand, model: elem }))
+							: null
+					}
+					className={`filter__item__models__item${true ? ' --disabled' : ''}`}
+				>
+					{ctx.model.filterInstance.models[brand].find((modelFromState) => modelFromState === elem) && 'okay'}
+					<CustomCheckBox initState={state} dependency={isParentChoisen} />
+					{elem}
+				</div>
+			))}
+		</>
+	);
+}
+
+function CustomCheckBox({ initState, dependency }: { initState: boolean; dependency: boolean }) {
+	const [state, setState] = useState(initState);
+
+	useEffect(() => {
+		setState(initState);
+	}, [initState]);
+
+	return (
+		<input
+			onChange={() => {}}
+			disabled={!dependency ? true : false}
+			checked={!dependency ? false : state}
+			type='checkbox'
+		/>
+	);
+}
+
 function useAxios(url: string) {
 	const [data, setData] = useState<FilterModel | null>(null);
 	const [started, setStarted] = useState(false);
@@ -120,119 +200,3 @@ function useAxios(url: string) {
 		finished,
 	};
 }
-
-function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs }) {
-	const ctx = useContext(mainContext);
-	const { brands } = ctx.model.filterInstance;
-
-	return (
-		<div className='filter__item'>
-			<h2
-				className={`filter__item__brand${!brands.length ? `` : !brands.includes(item.brand) ? ' --disabled' : ''}`}
-				onClick={() => {
-					if (ctx.controller.dispatch) {
-						ctx.controller.dispatch(setBrand({ brand: item.brand as Brand }));
-					}
-				}}
-			>
-				<input onChange={(f) => f} checked={false ? true : false} type='checkbox' />
-				brand: {item.brand}
-			</h2>
-			{ (brands.includes(item.brand) || !brands.length) && <div className={`filter__item__models`}>
-				<FilterItemChilds
-					modelname={item}
-					isParentChoisen={false}
-				/>
-			</div> }
-		</div>
-	);
-}
-
-function FilterItemChilds({
-	modelname,
-	isParentChoisen,
-}: {
-	isParentChoisen: boolean;
-	modelname: ModelsAsIs;
-}) {
-	const [state, setState] = useState(false);
-
-	const m = modelname;
-	const { brand, models } = m;
-
-	const ctx = useContext(mainContext);
-
-	const { dispatch } = ctx.controller;
-
-	useEffect(() => {
-		if (!isParentChoisen) {
-			setState(isParentChoisen);
-		}
-	}, [isParentChoisen]);
-
-	return (
-		<>
-			{models.map((elem) => (
-				<div onClick={() => ctx.controller.dispatch ? ctx.controller.dispatch(setModel({brand:brand as Brand , model:elem})) : null } className={`filter__item__models__item${true ? ' --disabled' : ''}`}>
-					{ 
-						ctx.model.filterInstance.models[brand].find(modelFromState => modelFromState === elem) && 'okay'
-					}
-					<CustomCheckBox initState={state} dependency={isParentChoisen} />
-					{elem}
-				</div>
-			))}
-		</>
-	);
-}
-
-function CustomCheckBox({ initState, dependency }: { initState: boolean; dependency: boolean }) {
-	const [state, setState] = useState(initState);
-
-	useEffect(() => {
-		setState(initState);
-	}, [initState]);
-
-	return (
-		<input
-			onChange={() => {}}
-			disabled={!dependency ? true : false}
-			checked={!dependency ? false : state}
-			type='checkbox'
-		/>
-	);
-}
-
-// function modelsGetter(brand: Brand , models:ModelsAsIs):ModelsAsIs {
-// 	switch (brand) {
-// 		case 'BMW':
-
-// 			const model: ModelsAsIs = {
-// 				brand:'BMW' ,
-// 				models:
-// 			}
-			
-// 			return {
-// 				brand: 'BMW',
-// 				models:
-// 			}
-// 		case 'EXEED':
-// 		case 'Geely':
-// 		case 'Hyundai':
-// 		case 'Kia':
-// 		case 'Renault':
-// 		case 'Toyota':
-
-// 	}
-// }
-
-// { brand: 'BMW'; models: ('X2' | 'X5')[] }
-// 	| { brand: 'Chery'; models: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[] }
-// 	| { brand: 'EXEED'; models: ('LX' | 'TXL' | 'VX')[] }
-// 	| { brand: 'Geely'; models: 'Coolray'[] }
-// 	| { brand: 'Hyundai'; models: 'Sonata'[] }
-// 	| { brand: 'Kia'; models: ('K5' | 'Optima' | 'Rio')[] }
-// 	| { brand: 'Renault'; models: 'Logan'[] }
-// 		| { brand: 'Toyota'; models: 'Camry'[] };
-	
-
-		// type Model<T> = ReturnType<typeof Mode>

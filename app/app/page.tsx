@@ -1,8 +1,10 @@
 'use client';
 
-import React, { act, createContext, useEffect, useReducer, useState } from 'react';
+import React, { act, createContext, useContext, useEffect, useReducer, useState } from 'react';
 import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL } from '@/types';
 import Filter from '@/components/filter';
+import axios from 'axios';
+import Catalogue from '@/components/catalogue';
 
 type VehicleModel =
 	| { brand: 'BMW'; models: ('m1' | 'm2' | 'm3')[] }
@@ -92,7 +94,6 @@ const initialState: MainState = {
 };
 
 const mainReducer = (state: MainState, action: Action): MainState => {
-
 	switch (action.type) {
 		case SET_BACKGROUND:
 			return state;
@@ -103,10 +104,15 @@ const mainReducer = (state: MainState, action: Action): MainState => {
 					...state.filterInstance,
 					models: {
 						...state.filterInstance.models,
-						[action.payload.brand]: (!state.filterInstance.models[action.payload.brand].find(elem => elem === action.payload.model) ? [
-							...state.filterInstance.models[action.payload.brand],
-							action.payload.model,
-						] : [...state.filterInstance.models[action.payload.brand].filter(elem => elem !== action.payload.model)]),
+						[action.payload.brand]: !state.filterInstance.models[action.payload.brand].find(
+							(elem) => elem === action.payload.model
+						)
+							? [...state.filterInstance.models[action.payload.brand], action.payload.model]
+							: [
+									...state.filterInstance.models[action.payload.brand].filter(
+										(elem) => elem !== action.payload.model
+									),
+								],
 					},
 				},
 			};
@@ -153,11 +159,40 @@ export const mainContext = createContext<ContextModel>({
 
 const App = () => {
 	const [state, dispatch] = useReducer(mainReducer, initialState);
-	const [textInputValue, setTextInputValue] = useState('');
+	const [queryParams, setQueryParams] = useState('');
+
+	const { data } = useGetCatalog(queryParams);
+	// useEffect(() => {
+	// 	console.log(state.filterInstance);
+	// }, [state]);
 
 	useEffect(() => {
-		console.log(state.filterInstance);
-	}, [state]);
+		console.log({ data });
+	}, [data]);
+
+	useEffect(() => {
+		// console.log(state.filterInstance.brands);
+	}, [state.filterInstance.brands]);
+	useEffect(() => {
+		let str = '';
+
+		for (const model in state.filterInstance.models) {
+			const models = state.filterInstance.models[model as Brand];
+
+			if (models.length) {
+				models.forEach((elem) => {
+					str += '&model[]=' + elem;
+				});
+			}
+		}
+
+		state.filterInstance.brands.forEach((brand) => {
+			str += '&brand[]=' + brand;
+		});
+
+		setQueryParams(str);
+		console.log({ str });
+	}, [state.filterInstance.models, state.filterInstance.brands]);
 
 	return (
 		<mainContext.Provider
@@ -168,11 +203,14 @@ const App = () => {
 				},
 			}}
 		>
-			<div className='regular-container' style={{ backgroundColor: state.background.color }}>
-				<div>
+			<div className='catalogue' style={{ backgroundColor: state.background.color }}>
+				<div className='catalogue__sidebar--left'>
 					<h2>choisen vehicles:</h2>
 					<div>models</div>
 					<Filter />
+				</div>
+				<div className='catalogue__content'>
+					{data ? <Catalogue content={data} /> : <div className='catalogue__preloader'>preloader...</div>}
 				</div>
 			</div>
 		</mainContext.Provider>
@@ -189,4 +227,46 @@ function clickHandler(dispatch: React.Dispatch<Action>, action: Action) {
 
 export default App;
 
-function insertModels() {}
+export interface Catalogmodel {
+	result: number;
+	page: number;
+	pages: number;
+	per_page: number;
+	list: [
+		{
+			id: number;
+			brand: string;
+			model: string;
+			number: string;
+			price: number;
+			image: string;
+			tarif: string[];
+		},
+	];
+}
+
+export function useGetCatalog(queryParams: string): { data: Catalogmodel | null } {
+	const ctx = useContext(mainContext);
+
+	const [data, setData] = useState<Catalogmodel | null>(null);
+
+	const baseURL = 'https://test.taxivoshod.ru/api/test/?w=catalog-cars';
+
+	useEffect(() => {
+		axios
+			.get(baseURL + queryParams)
+			.then((response) => {
+				// console.log(response.data);
+				const { data } = response;
+				if (data) {
+					setData(data);
+				}
+			})
+			.catch((err) => err)
+			.finally(() => {});
+	}, [queryParams]);
+
+	return {
+		data,
+	};
+}

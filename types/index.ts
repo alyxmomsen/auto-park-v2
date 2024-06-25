@@ -10,7 +10,7 @@ export type Model =
 	| { Renault: 'Logan'[] }
 	| { Toyota: 'Camry'[] };
 
-export type ModelsAsIs=
+export type ModelsAsIs =
 	| { brand: 'BMW'; models: ('X2' | 'X5')[] }
 	| { brand: 'Chery'; models: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[] }
 	| { brand: 'EXEED'; models: ('LX' | 'TXL' | 'VX')[] }
