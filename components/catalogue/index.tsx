@@ -1,6 +1,9 @@
 import { Catalogmodel } from '@/app/app/page';
+import { doit } from '@/classes';
 import Link from 'next/link';
 import React, { Suspense, useEffect, useRef } from 'react';
+
+doit();
 
 const Catalogue = ({ content }: { content: Catalogmodel }) => {
 	return (
