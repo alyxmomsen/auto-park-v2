@@ -1,6 +1,6 @@
-import { setBrand, setBrandAsSingle, setModel } from '@/action-creators';
-import { mainContext, VehiclesState } from '@/app/app/page';
-import { Action, Brand, /* Model, */ ModelsAsIs, TarifCode, tariffFabric } from '@/types';
+import { setBrand, setBrandAsSingle, setModel, setTariff } from '@/action-creators';
+import { mainContext } from '@/app/app/page';
+import { Action, Brand, /* Model, */ ModelsAsIs, TarifCode, Tariff, tariffFabric } from '@/types';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -55,12 +55,7 @@ type FilterModel = /* typeof filterModel */ {
 	tarif: {
 		name: string;
 		type: string;
-		values: {
-			'13': string;
-			'14': string;
-			'22': string;
-			'26': string;
-		};
+		values: Tariff[];
 	};
 };
 
@@ -68,6 +63,8 @@ const Filter = () => {
 	const url = {
 		filterModel: 'https://test.taxivoshod.ru/api/test/?w=catalog-filter',
 	};
+
+	const ctx = useContext(mainContext);
 
 	const { data: filter, started, finished } = useAxios(url.filterModel);
 
@@ -80,7 +77,19 @@ const Filter = () => {
 			<div className='filter__tariff-options'>
 				{filter
 					? Object.getOwnPropertyNames(filter.tarif.values).map((elem) => (
-							<div>{tariffFabric(elem as TarifCode).name}</div>
+							<div
+								onClick={() =>
+									ctx.service.dispatch
+										? ctx.service.dispatch(
+												setTariff({
+													tariff: tariffFabric(elem as TarifCode),
+												})
+											)
+										: null
+								}
+							>
+								{tariffFabric(elem as TarifCode).name}
+							</div>
 						))
 					: null}
 			</div>
@@ -205,6 +214,6 @@ function useAxios(url: string) {
 	};
 }
 
-type x = Extract<ModelsAsIs, {brand:'BMW'}>
+type x = Extract<ModelsAsIs, { brand: 'BMW' }>;
 
-type m = keyof ModelsAsIs
+type m = keyof ModelsAsIs;

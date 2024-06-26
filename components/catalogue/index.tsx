@@ -15,7 +15,8 @@ const Catalogue = ({ content }: { content: Catalogmodel }) => {
 				{content.list.map((card, i) => (
 					<Link href={'/app/' + card.id} className={'catalogue-card'}>
 						<div key={i}>
-							<div>model: {card.model}</div>
+                            <div>model: {card.model}</div>
+                            <div>tariff: {card.tarif.map((tarif, i) => <span>{i + 1}{') '}{'"'}{tarif}{'"'}{' '}</span>)}</div>
 							<div>
 								<Suspense fallback={<div>loading...</div>}>
 									<img /* width={200} height={200} */ alt='alt data' src={card.image} />

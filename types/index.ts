@@ -6,6 +6,31 @@ export type Tariff =
 	| { code: '22'; name: 'Комфорт2' }
 	| { code: '26'; name: 'Комфорт3' };
 
+export function tariffCreator(code: TarifCode): Tariff {
+	switch (code) {
+		case '13':
+			return {
+				code,
+				name: 'Комфорт+',
+			};
+		case '14':
+			return {
+				code,
+				name: 'Комфорт',
+			};
+		case '22':
+			return {
+				code,
+				name: 'Комфорт2',
+			};
+		case '26':
+			return {
+				code,
+				name: 'Комфорт3',
+			};
+	}
+}
+
 export function tariffFabric(code: TarifCode): Tariff {
 	switch (code) {
 		case '13':

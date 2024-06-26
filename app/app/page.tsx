@@ -1,23 +1,12 @@
 'use client';
 
 import React, { act, createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF } from '@/types';
+import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF, Tariff } from '@/types';
 import Filter from '@/components/filter';
 import axios from 'axios';
 import Catalogue from '@/components/catalogue';
 
-export interface VehiclesState {
-	BMW?: ('X2' | 'X5')[];
-	Chery?: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[];
-	EXEED?: ('LX' | 'TXL' | 'VX')[];
-	Geely?: 'Coolray'[];
-	Hyundai?: 'Sonata'[];
-	Kia?: ('K5' | 'Optima' | 'Rio')[];
-	Renault?: 'Logan'[];
-	Toyota?: 'Camry'[];
-}
-
-// export interface
+// export
 
 const filterInstance: {
 	models: {
@@ -31,12 +20,7 @@ const filterInstance: {
 		Toyota: 'Camry'[];
 	};
 	brands: string[];
-	tariffs: (
-		| { code: '13'; name: 'Комфорт+' }
-		| { code: '14'; name: 'Комфорт' }
-		| { code: '22'; name: 'Комфорт2' }
-		| { code: '26'; name: 'Комфорт3' }
-	)[];
+	tariffs: Tariff[];
 } = {
 	models: {
 		BMW: [],
@@ -66,7 +50,7 @@ const initialState: MainState = {
 	filterInstance,
 };
 
-const mainReducer = (state: MainState, action: Action): MainState => {
+export const mainReducer = (state: MainState, action: Action): MainState => {
 	switch (action.type) {
 		case SET_BACKGROUND:
 			return state;
@@ -116,9 +100,9 @@ const mainReducer = (state: MainState, action: Action): MainState => {
 				...state,
 				filterInstance: {
 					...state.filterInstance,
-					tariffs: [
-						/* ...action.payload */
-					],
+					tariffs: state.filterInstance.tariffs.find((elem) => elem.code === action.payload.code)
+						? [...state.filterInstance.tariffs.filter((elem) => elem.code != action.payload.code)]
+						: [...state.filterInstance.tariffs, action.payload],
 				},
 			};
 		default:
@@ -172,9 +156,13 @@ const App = () => {
 			str += '&brand[]=' + brand;
 		});
 
+		state.filterInstance.tariffs.forEach(tarif => {
+			str += '&tarif[]=' + tarif.code
+		});
+
 		setQueryParams(str);
 		console.log({ str });
-	}, [state.filterInstance.models, state.filterInstance.brands]);
+	}, [state.filterInstance.models, state.filterInstance.brands , state.filterInstance.tariffs]);
 
 	return (
 		<mainContext.Provider
