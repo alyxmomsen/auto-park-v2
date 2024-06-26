@@ -1,4 +1,4 @@
-import { setBrand, setBrandAsSingle, setModel, setTariff } from '@/action-creators';
+import { resetTariffs, setBrand, setBrandAsSingle, setModel, setTariff } from '@/action-creators';
 import { mainContext } from '@/app/app/page';
 import { Action, Brand, /* Model, */ ModelsAsIs, TarifCode, Tariff, tariffFabric } from '@/types';
 import axios from 'axios';
@@ -74,10 +74,13 @@ const Filter = () => {
 
 	return (
 		<div className='filter'>
+			<div className='filter__block-title'>
+				<h2>Тарифы </h2>{ctx.model.filterInstance.tariffs.length ? <button onClick={() => {ctx.service.dispatch && ctx.service.dispatch(resetTariffs())}}>clear</button> : null }
+			</div>
 			<div className='filter__tariff-options'>
 				{filter
 					? Object.getOwnPropertyNames(filter.tarif.values).map((elem) => (
-							<div
+						<div className={`filter-tariff-item ${ctx.model.filterInstance.tariffs.find(tariff => tariff.code === (elem as TarifCode)) ? '--choisen' : ''}`}
 								onClick={() =>
 									ctx.service.dispatch
 										? ctx.service.dispatch(
@@ -92,6 +95,9 @@ const Filter = () => {
 							</div>
 						))
 					: null}
+			</div>
+			<div className={`filter__block-title`}>
+				<h2>Модели</h2> {ctx.model.filterInstance.brands.length ? <button>clear</button> : null }
 			</div>
 			<div className='filter__basic-options'>
 				{(started && !finished && <div className='preloader--basic'>loading...</div>) || (

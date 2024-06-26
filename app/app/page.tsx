@@ -1,7 +1,7 @@
 'use client';
 
 import React, { act, createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { Action, Brand, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF, Tariff } from '@/types';
+import { Action, Brand, RESET_TARIFFES, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF, Tariff } from '@/types';
 import Filter from '@/components/filter';
 import axios from 'axios';
 import Catalogue from '@/components/catalogue';
@@ -95,6 +95,14 @@ export const mainReducer = (state: MainState, action: Action): MainState => {
 					brands: [action.payload],
 				},
 			};
+		// case RESET_BRANDS:
+		// 	return {
+		// 		...state,
+		// 		filterInstance: {
+		// 			...state.filterInstance,
+		// 			brands: [action.payload],
+		// 		},
+		// 	};
 		case SET_TARIFF:
 			return {
 				...state,
@@ -103,6 +111,14 @@ export const mainReducer = (state: MainState, action: Action): MainState => {
 					tariffs: state.filterInstance.tariffs.find((elem) => elem.code === action.payload.code)
 						? [...state.filterInstance.tariffs.filter((elem) => elem.code != action.payload.code)]
 						: [...state.filterInstance.tariffs, action.payload],
+				},
+			};
+		case RESET_TARIFFES:
+			return {
+				...state,
+				filterInstance: {
+					...state.filterInstance,
+					tariffs: [],
 				},
 			};
 		default:
