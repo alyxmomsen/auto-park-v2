@@ -1,4 +1,4 @@
-import { Action, Brand, RESET_TARIFFES, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF, Tariff } from '@/types';
+import { Action, Brand, RESET_BRANDS, RESET_TARIFFES, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF, Tariff } from '@/types';
 
 export const setModel = ({ brand, model }: { brand: Brand; model: string }): Action => {
 	return {
@@ -17,6 +17,13 @@ export const setBrand = ({ brand }: { brand: Brand }): Action => {
 	};
 };
 
+export const resetBrands = ():Action => {
+	return {
+		type: RESET_BRANDS,
+		payload:undefined ,
+	}
+}
+
 export const setBrandAsSingle = ({ brand }: { brand: Brand }): Action => {
 	return {
 		type: SET_BRAND_AS_SINGLE,
@@ -31,9 +38,9 @@ export const setTariff = ({ tariff }: { tariff: Tariff }): Action => {
 	};
 };
 
-export const resetTariffs = ():Action => {
+export const resetTariffs = (): Action => {
 	return {
 		type: RESET_TARIFFES,
-		payload:undefined ,
-	}
-}
+		payload: undefined,
+	};
+};

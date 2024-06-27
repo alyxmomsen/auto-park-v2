@@ -1,7 +1,18 @@
 'use client';
 
 import React, { act, createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { Action, Brand, RESET_TARIFFES, SET_BACKGROUND, SET_BRAND, SET_BRAND_AS_SINGLE, SET_MODEL, SET_TARIFF, Tariff } from '@/types';
+import {
+	Action,
+	Brand,
+	RESET_BRANDS,
+	RESET_TARIFFES,
+	SET_BACKGROUND,
+	SET_BRAND,
+	SET_BRAND_AS_SINGLE,
+	SET_MODEL,
+	SET_TARIFF,
+	Tariff,
+} from '@/types';
 import Filter from '@/components/filter';
 import axios from 'axios';
 import Catalogue from '@/components/catalogue';
@@ -95,14 +106,24 @@ export const mainReducer = (state: MainState, action: Action): MainState => {
 					brands: [action.payload],
 				},
 			};
-		// case RESET_BRANDS:
-		// 	return {
-		// 		...state,
-		// 		filterInstance: {
-		// 			...state.filterInstance,
-		// 			brands: [action.payload],
-		// 		},
-		// 	};
+		case RESET_BRANDS:
+			return {
+				...state,
+				filterInstance: {
+					...state.filterInstance,
+					brands: [],
+					models: {
+						BMW:[],
+						Chery:[],
+						EXEED:[],
+						Geely:[],
+						Hyundai:[],
+						Kia:[] ,
+						Renault:[] ,
+						Toyota: [],
+					}
+				},
+			};
 		case SET_TARIFF:
 			return {
 				...state,
@@ -172,13 +193,13 @@ const App = () => {
 			str += '&brand[]=' + brand;
 		});
 
-		state.filterInstance.tariffs.forEach(tarif => {
-			str += '&tarif[]=' + tarif.code
+		state.filterInstance.tariffs.forEach((tarif) => {
+			str += '&tarif[]=' + tarif.code;
 		});
 
 		setQueryParams(str);
 		console.log({ str });
-	}, [state.filterInstance.models, state.filterInstance.brands , state.filterInstance.tariffs]);
+	}, [state.filterInstance.models, state.filterInstance.brands, state.filterInstance.tariffs]);
 
 	return (
 		<mainContext.Provider

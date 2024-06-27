@@ -75,6 +75,7 @@ export const SET_BRAND = 'SET_BRAND';
 export const SET_BRAND_AS_SINGLE = 'SET_BRAND_SINGLE';
 export const SET_TARIFF = 'SET_SET_TARIFF';
 export const RESET_TARIFFES = 'RESET_TARIFFES';
+export const RESET_BRANDS = 'RESET_BRANDS';
 
 export type Action =
 	| {
@@ -99,7 +100,11 @@ export type Action =
 	| {
 			type: typeof SET_TARIFF;
 			payload: Tariff;
-	  }| {
+	  }
+	| {
 			type: typeof RESET_TARIFFES;
+			payload: undefined;
+	  }| {
+			type: typeof RESET_BRANDS;
 			payload: undefined;
 	  };

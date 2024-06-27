@@ -24,9 +24,10 @@ a.dashboard__sidebar__controls__item {
 }
 
 button {
-	background-color: #4e6277;
-	padding: 9px;
-	color: whitesmoke;
+	/* background-color: beige; */
+	padding: 6px;
+	color: beige;
+	border: 2px solid beige;
 }
 
 .filter {
@@ -138,26 +139,67 @@ button {
 /* ---------------------------- */
 
 .filter__block-title {
-	height: 50px ;
+	height: 50px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
 /* ------------------------ */
+
+.filter__tariff-options_item-container {
+	display: flex;
+}
+
+.filter__tariff-options_item-container.--choisen {
+	background-color: beige;
+}
+
 .filter-tariff-item {
 	cursor: pointer;
 	padding-left: 9px;
-	transition: all .2s ease-out;
+	padding-right: 9px;
+	transition: all 0.2s ease-out;
 }
 
 .filter-tariff-item:hover {
 	cursor: pointer;
-	background-color: green;
-	padding-left: 19px;
+	padding-left: 16px;
 }
 
 .filter-tariff-item.--choisen {
-	background-color: beige;
 	color: #12171a;
+}
+
+.filter__block-title__btn-clear {
+	border-radius: 6px;
+	animation-name: button_anim;
+	animation-duration: 0.6s;
+	animation-iteration-count: 1;
+	animation-delay: 0;
+	animation-fill-mode: forwards;
+	animation-direction: normal;
+}
+
+@keyframes button_anim {
+	from {
+		transform: rotate(50deg);
+		opacity: 0;
+	}
+
+	33% {
+		transform: rotate(0deg);
+		opacity: 1;
+	}
+
+	66% {
+		transform: scale(1.1);
+		/* transform: rotate(-50deg); */
+		/* opacity: .3; */
+	}
+
+	to {
+		/* transform: rotate(0deg); */
+		/* opacity: 1; */
+	}
 }

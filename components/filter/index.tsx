@@ -1,4 +1,4 @@
-import { resetTariffs, setBrand, setBrandAsSingle, setModel, setTariff } from '@/action-creators';
+import { resetBrands, resetTariffs, setBrand, setBrandAsSingle, setModel, setTariff } from '@/action-creators';
 import { mainContext } from '@/app/app/page';
 import { Action, Brand, /* Model, */ ModelsAsIs, TarifCode, Tariff, tariffFabric } from '@/types';
 import axios from 'axios';
@@ -75,29 +75,56 @@ const Filter = () => {
 	return (
 		<div className='filter'>
 			<div className='filter__block-title'>
-				<h2>Тарифы </h2>{ctx.model.filterInstance.tariffs.length ? <button onClick={() => {ctx.service.dispatch && ctx.service.dispatch(resetTariffs())}}>clear</button> : null }
+				<h2>Тарифы </h2>
+				{ctx.model.filterInstance.tariffs.length > 1 ? (
+					<button
+						className={`filter__block-title__btn-clear`}
+						onClick={() => {
+							ctx.service.dispatch && ctx.service.dispatch(resetTariffs());
+						}}
+					>
+						clear
+					</button>
+				) : null}
 			</div>
 			<div className='filter__tariff-options'>
 				{filter
-					? Object.getOwnPropertyNames(filter.tarif.values).map((elem) => (
-						<div className={`filter-tariff-item ${ctx.model.filterInstance.tariffs.find(tariff => tariff.code === (elem as TarifCode)) ? '--choisen' : ''}`}
-								onClick={() =>
-									ctx.service.dispatch
-										? ctx.service.dispatch(
-												setTariff({
-													tariff: tariffFabric(elem as TarifCode),
-												})
-											)
-										: null
-								}
-							>
-								{tariffFabric(elem as TarifCode).name}
-							</div>
-						))
+					? Object.getOwnPropertyNames(filter.tarif.values).map((elem) => {
+							const currentTarifCode = elem as TarifCode;
+							const tariffs = ctx.model.filterInstance.tariffs;
+
+							return (
+								<div
+									className={`filter__tariff-options_item-container ${tariffs.find((tariff) => tariff.code === currentTarifCode) ? '--choisen' : ''}`}
+								>
+									<input
+										checked={!!tariffs.find((tariff) => tariff.code === currentTarifCode)}
+										type='checkbox'
+									/>
+									<div
+										className={`filter-tariff-item ${tariffs.find((tariff) => tariff.code === currentTarifCode) ? '--choisen' : ''}`}
+										onClick={() =>
+											ctx.service.dispatch
+												? ctx.service.dispatch(
+														setTariff({
+															tariff: tariffFabric(currentTarifCode),
+														})
+													)
+												: null
+										}
+									>
+										{tariffFabric(currentTarifCode).name}
+									</div>
+								</div>
+							);
+						})
 					: null}
 			</div>
 			<div className={`filter__block-title`}>
-				<h2>Модели</h2> {ctx.model.filterInstance.brands.length ? <button>clear</button> : null }
+				<h2>Модели</h2>{' '}
+				{ctx.model.filterInstance.brands.length > 1 ? (
+					<button onClick={() => {ctx.service.dispatch ? ctx.service.dispatch(resetBrands()) : null}} className={`filter__block-title__btn-clear`}>clear</button>
+				) : null}
 			</div>
 			<div className='filter__basic-options'>
 				{(started && !finished && <div className='preloader--basic'>loading...</div>) || (
