@@ -277,3 +277,20 @@ export function useGetCatalog(queryParams: string): { data: Catalogmodel | null 
 		data,
 	};
 }
+
+
+const arr = ['a', 2] as const;
+
+const arr2: ['a', 'b', 'c'] = ['a', 'b', 'c'];
+
+enum enm {
+	a,
+	b,
+	c
+}
+
+const z: enm = 0;
+
+type t = typeof enm;
+
+const x: t = enm;
