@@ -88,7 +88,7 @@ button {
 .filter__item__models.--rolldown {
 	/* background-color: red; */
 	animation-name: rolldown;
-	animation-duration: .2s;
+	animation-duration: 0.2s;
 	animation-fill-mode: forwards;
 }
 
@@ -215,7 +215,6 @@ button {
 	}
 }
 
-
 @keyframes rolldown {
 	form {
 		height: 0px;
@@ -224,4 +223,27 @@ button {
 	to {
 		height: 200px;
 	}
+}
+
+
+.messenger-root {
+	display: flex;
+	border: 1px solid wheat;
+	gap:19px;
+	padding: 9px;
+}
+
+.messenger-root__controller {
+	border: 1px solid #8fb7a6;
+}
+
+.messenger-root__chat {
+	display: flex;
+	flex-direction: column;
+	gap:9px;
+}
+
+.message {
+	border: 1px solid gold;
+	padding: 9px;
 }

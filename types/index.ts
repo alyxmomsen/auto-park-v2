@@ -104,7 +104,8 @@ export type Action =
 	| {
 			type: typeof RESET_TARIFFES;
 			payload: undefined;
-	  }| {
+	  }
+	| {
 			type: typeof RESET_BRANDS;
 			payload: undefined;
 	  };

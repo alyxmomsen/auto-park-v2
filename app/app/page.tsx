@@ -113,15 +113,15 @@ export const mainReducer = (state: MainState, action: Action): MainState => {
 					...state.filterInstance,
 					brands: [],
 					models: {
-						BMW:[],
-						Chery:[],
-						EXEED:[],
-						Geely:[],
-						Hyundai:[],
-						Kia:[] ,
-						Renault:[] ,
+						BMW: [],
+						Chery: [],
+						EXEED: [],
+						Geely: [],
+						Hyundai: [],
+						Kia: [],
+						Renault: [],
 						Toyota: [],
-					}
+					},
 				},
 			};
 		case SET_TARIFF:
@@ -278,7 +278,6 @@ export function useGetCatalog(queryParams: string): { data: Catalogmodel | null 
 	};
 }
 
-
 const arr = ['a', 2] as const;
 
 const arr2: ['a', 'b', 'c'] = ['a', 'b', 'c'];
@@ -286,7 +285,7 @@ const arr2: ['a', 'b', 'c'] = ['a', 'b', 'c'];
 enum enm {
 	a,
 	b,
-	c
+	c,
 }
 
 const z: enm = 0;

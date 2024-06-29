@@ -123,7 +123,14 @@ const Filter = () => {
 			<div className={`filter__block-title`}>
 				<h2>Модели</h2>{' '}
 				{ctx.model.filterInstance.brands.length > 1 ? (
-					<button onClick={() => {ctx.service.dispatch ? ctx.service.dispatch(resetBrands()) : null}} className={`filter__block-title__btn-clear`}>clear</button>
+					<button
+						onClick={() => {
+							ctx.service.dispatch ? ctx.service.dispatch(resetBrands()) : null;
+						}}
+						className={`filter__block-title__btn-clear`}
+					>
+						clear
+					</button>
 				) : null}
 			</div>
 			<div className='filter__basic-options'>
@@ -155,7 +162,7 @@ function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs 
 				brand: {item.brand}
 			</h2>
 			{(brands.includes(item.brand) || !brands.length) && (
-				<div className={`filter__item__models ${(brands.includes(item.brand) ? '--rolldown' : '')}`}>
+				<div className={`filter__item__models ${brands.includes(item.brand) ? '--rolldown' : ''}`}>
 					<FilterItemChilds modelname={item} isParentChoisen={false} />
 				</div>
 			)}
