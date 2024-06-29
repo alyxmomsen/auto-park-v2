@@ -118,7 +118,7 @@ const trackerReducer = (state: TrackerState, action: TrackerAction):TrackerState
 const Tracker = () => {
 
   const weburl = 'http://85.234.106.173:3333/';
-  const url = 'http://localhost:3003/';
+  const url = 'http://85.234.106.173:3003/';
 
   const [trackerState, dispatchTrackerState] = useReducer<(state: TrackerState, action: TrackerAction) => TrackerState>(trackerReducer, {
     pendingMessages: [],
