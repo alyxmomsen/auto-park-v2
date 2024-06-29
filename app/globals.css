@@ -81,6 +81,17 @@ button {
 	align-items: center;
 }
 
+.filter__item__models {
+	height: 0px;
+}
+
+.filter__item__models.--rolldown {
+	/* background-color: red; */
+	animation-name: rolldown;
+	animation-duration: .2s;
+	animation-fill-mode: forwards;
+}
+
 .filter__item__models__item {
 	color: ghostwhite;
 	cursor: pointer;
@@ -201,5 +212,16 @@ button {
 	to {
 		/* transform: rotate(0deg); */
 		/* opacity: 1; */
+	}
+}
+
+
+@keyframes rolldown {
+	form {
+		height: 0px;
+	}
+
+	to {
+		height: 200px;
 	}
 }

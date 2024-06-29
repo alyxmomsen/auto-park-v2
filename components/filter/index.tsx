@@ -155,7 +155,7 @@ function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs 
 				brand: {item.brand}
 			</h2>
 			{(brands.includes(item.brand) || !brands.length) && (
-				<div className={`filter__item__models`}>
+				<div className={`filter__item__models ${(brands.includes(item.brand) ? '--rolldown' : '')}`}>
 					<FilterItemChilds modelname={item} isParentChoisen={false} />
 				</div>
 			)}
