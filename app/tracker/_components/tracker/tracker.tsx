@@ -225,11 +225,11 @@ const Tracker = () => {
           </div>
           <div className={'messenger-root__chat'}>
             {
-              trackerState.postedMessages.map(message => <div className={'message'}><div>{ message.value }</div></div>)
+              trackerState.postedMessages.reverse().map(message => <div className={'message'}><div>{ message.value }</div></div>)
               }
           </div>
         </div>
-
+        
 			</div>
 		</div>
 	);
