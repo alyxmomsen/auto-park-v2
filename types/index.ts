@@ -1,4 +1,4 @@
-export type Brand = 'BMW' | 'EXEED' | 'Geely' | 'Hyundai' | 'Kia' | 'Renault' | 'Toyota';
+export type Brand = 'BMW' | 'EXEED' | 'Geely' | 'Hyundai' | 'Kia' | 'Renault' | 'Toyota' | 'Chery';
 
 export type Tariff =
 	| { code: '13'; name: 'Комфорт+' }
@@ -59,7 +59,32 @@ export function tariffFabric(code: TarifCode): Tariff {
 export type TarifCode = '13' | '14' | '22' | '26';
 export type TarifName = 'Комфорт' | 'Комфорт' | 'Комфорт2' | 'Комфорт3';
 
-export type ModelsAsIs =
+interface IVehicleModel {
+	brand: Brand;
+	models: string[];
+}
+
+
+
+abstract class Vehicle {
+	model: TheModel;
+
+	constructor(model: TheModel) {
+		this.model = model;
+	}
+}
+
+class TheModel implements IVehicleModel {
+	brand: Brand;
+	models: string[];
+
+	constructor(model:VehicleModel) {
+		this.brand = model.brand;
+		this.models = model.models;
+	}
+}
+
+export type VehicleModel =
 	| { brand: 'BMW'; models: ('X2' | 'X5')[] }
 	| { brand: 'Chery'; models: ('Arrizo 8' | 'Tiggo 4' | 'Tiggo 7 Pro' | 'Tiggo 7 Pro Max' | 'Tiggo 8 Pro Max')[] }
 	| { brand: 'EXEED'; models: ('LX' | 'TXL' | 'VX')[] }

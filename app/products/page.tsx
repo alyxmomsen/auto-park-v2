@@ -1,7 +1,9 @@
 // 'use server'
 
+import { service_getIfAuth } from '@/services/getIfAuth';
 import axios from 'axios';
 import { cookies, headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import React from 'react';
 import { Style } from 'util';
 
@@ -13,10 +15,18 @@ const flexItemStyle = {
 	flex: '0 0 200',
 };
 
-const Products = () => {
+const Products = async () => {
 	const cks = cookies().getAll();
 
-	return (
+	const ifAuth = await service_getIfAuth();
+
+	const OPENED =
+		true
+		&& ifAuth && ifAuth.auth
+		&& false
+		;
+	
+	return OPENED ? (
 		<div className={`page-base`}>
 			<div
 				style={{
@@ -35,7 +45,7 @@ const Products = () => {
 			</div>
 			hello from products
 		</div>
-	);
+	) : redirect('/');
 };
 
 export default Products;

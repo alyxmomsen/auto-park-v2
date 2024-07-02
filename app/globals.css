@@ -225,11 +225,10 @@ button {
 	}
 }
 
-
 .messenger-root {
 	display: flex;
 	border: 1px solid wheat;
-	gap:19px;
+	gap: 19px;
 	padding: 9px;
 }
 
@@ -240,7 +239,7 @@ button {
 .messenger-root__chat {
 	display: flex;
 	flex-direction: column;
-	gap:9px;
+	gap: 9px;
 }
 
 .message {

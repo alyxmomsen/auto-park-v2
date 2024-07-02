@@ -16,6 +16,9 @@ import {
 import Filter from '@/components/filter';
 import axios from 'axios';
 import Catalogue from '@/components/catalogue';
+import { redirect } from 'next/navigation';
+import { service_getIfAuth } from '@/services/getIfAuth';
+
 
 // export
 
@@ -161,17 +164,11 @@ export const mainContext = createContext<ContextModel>({
 	model: initialState,
 });
 
-const App = () => {
+const App = async () => {
 	const [state, dispatch] = useReducer(mainReducer, initialState);
 	const [queryParams, setQueryParams] = useState('');
 
 	const { data } = useGetCatalog(queryParams);
-
-	console.log({ state });
-
-	useEffect(() => {
-		console.log({ data });
-	}, [data]);
 
 	useEffect(() => {
 		// console.log(state.filterInstance.brands);
@@ -201,7 +198,15 @@ const App = () => {
 		console.log({ str });
 	}, [state.filterInstance.models, state.filterInstance.brands, state.filterInstance.tariffs]);
 
-	return (
+	const ifAuth = await service_getIfAuth();
+
+	const OPENED =
+		true
+		&& ifAuth && ifAuth.auth
+		&& false
+		;
+
+	return OPENED ? (
 		<mainContext.Provider
 			value={{
 				model: state,
@@ -221,7 +226,7 @@ const App = () => {
 				</div>
 			</div>
 		</mainContext.Provider>
-	);
+	) : redirect('/') ;
 };
 
 function clickHandler(dispatch: React.Dispatch<Action>, action: Action) {

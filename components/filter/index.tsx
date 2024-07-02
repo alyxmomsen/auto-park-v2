@@ -1,8 +1,9 @@
 import { resetBrands, resetTariffs, setBrand, setBrandAsSingle, setModel, setTariff } from '@/action-creators';
 import { mainContext } from '@/app/app/page';
-import { Action, Brand, /* Model, */ ModelsAsIs, TarifCode, Tariff, tariffFabric } from '@/types';
+import { Action, Brand, /* Model, */ VehicleModel, TarifCode, Tariff, tariffFabric } from '@/types';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
+import { filterFrame, IFilterModel } from './_filter_model';
 
 const filterModel = {
 	result: 1,
@@ -40,25 +41,6 @@ const filterModel = {
 	},
 };
 
-type FilterModel = /* typeof filterModel */ {
-	result: number;
-	brands: {
-		name: string;
-		code: string;
-		values: string[];
-	};
-	models: {
-		name: string;
-		type: string;
-		values: ModelsAsIs[];
-	};
-	tarif: {
-		name: string;
-		type: string;
-		values: Tariff[];
-	};
-};
-
 const Filter = () => {
 	const url = {
 		filterModel: 'https://test.taxivoshod.ru/api/test/?w=catalog-filter',
@@ -67,6 +49,10 @@ const Filter = () => {
 	const ctx = useContext(mainContext);
 
 	const { data: filter, started, finished } = useAxios(url.filterModel);
+
+	const [thefilter , ] = useState<IFilterModel>(filterFrame);
+
+	thefilter.brands.values
 
 	useEffect(() => {
 		console.log({ filter, started, finished });
@@ -144,7 +130,7 @@ const Filter = () => {
 
 export default Filter;
 
-function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs }) {
+function FilterItem({ state = true, item }: { state?: boolean; item: VehicleModel }) {
 	const ctx = useContext(mainContext);
 	const { brands } = ctx.model.filterInstance;
 
@@ -170,7 +156,7 @@ function FilterItem({ state = true, item }: { state?: boolean; item: ModelsAsIs 
 	);
 }
 
-function FilterItemChilds({ modelname, isParentChoisen }: { isParentChoisen: boolean; modelname: ModelsAsIs }) {
+function FilterItemChilds({ modelname, isParentChoisen }: { isParentChoisen: boolean; modelname: VehicleModel }) {
 	const [state, setState] = useState(false);
 
 	const m = modelname;
@@ -225,7 +211,7 @@ function CustomCheckBox({ initState, dependency }: { initState: boolean; depende
 }
 
 function useAxios(url: string) {
-	const [data, setData] = useState<FilterModel | null>(null);
+	const [data, setData] = useState<IFilterModel | null>(null);
 	const [started, setStarted] = useState(false);
 	const [finished, setFinished] = useState(false);
 
@@ -233,7 +219,7 @@ function useAxios(url: string) {
 		console.log('axios start');
 		setStarted(true);
 		axios
-			.get<FilterModel>(url)
+			.get<IFilterModel>(url)
 			.then((response) => {
 				console.log('axios finished');
 				const { data } = response;
@@ -254,6 +240,6 @@ function useAxios(url: string) {
 	};
 }
 
-type x = Extract<ModelsAsIs, { brand: 'BMW' }>;
+type x = Extract<VehicleModel, { brand: 'BMW' }>;
 
-type m = keyof ModelsAsIs;
+type m = keyof VehicleModel;
