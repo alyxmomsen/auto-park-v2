@@ -1,40 +1,38 @@
 export class KeyObserver {
+	private keys: string[];
+	private static instance: KeyObserver | null = null;
 
-    private keys: string[];
-    private static instance: KeyObserver | null = null;
-    
-    setKey(key: string) {
-        
-        if (!this.keys.includes(key)) {
-            this.keys = [...this.keys , key];
-        }
-    }
+	setKey(key: string) {
+		if (!this.keys.includes(key)) {
+			this.keys = [...this.keys, key];
+		}
+	}
 
-    removeKey(key:string) {
-        this.keys = [...this.keys.filter(elem => elem !== key)];
-    }
+	removeKey(key: string) {
+		this.keys = [...this.keys.filter((elem) => elem !== key)];
+	}
 
-    reset() {
-        this.keys = [];
-    }
+	reset() {
+		this.keys = [];
+	}
 
-    isTheKeySet(key:string) {
-        this.keys.includes(key);
-    }
+	isTheKeySet(key: string) {
+		this.keys.includes(key);
+	}
 
-    getAllKeys() {
-        return [...this.keys];
-    }
+	getAllKeys() {
+		return [...this.keys];
+	}
 
-    public static getInstance() {
-        if (KeyObserver.instance === null) {
-            KeyObserver.instance = new KeyObserver();
-        }
+	public static getInstance() {
+		if (KeyObserver.instance === null) {
+			KeyObserver.instance = new KeyObserver();
+		}
 
-        return KeyObserver.instance;
-    }
+		return KeyObserver.instance;
+	}
 
-    private constructor() {
-        this.keys = [];
-    }
+	private constructor() {
+		this.keys = [];
+	}
 }
