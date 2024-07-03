@@ -1,3 +1,4 @@
+import { Renderer } from "../_Renderer/index.js";
 
 interface IUpdateRender {
     update(): void;
@@ -9,20 +10,51 @@ interface IPosition {
     y: number;
 } 
 
+enum MovingX {
+    LEFT = -1,
+    NULL ,
+    RIGHT,
+}
+
+enum MovingY {
+    UP = -1,
+    NULL,
+    DOWN, 
+}
+
+
+
+class EntityState {
+    protected moving: [MovingX, MovingY];
+    getState() {
+        return this.moving;
+    }
+
+    setState(x:MovingX , y:MovingY) {
+        this.moving = [x, y];
+    }
+    constructor() {
+        this.moving = [MovingX.NULL, MovingY.NULL];
+
+    }
+}
+
 abstract class Position {
-    private position: IPosition;
+    private x: number;
+    private y: number;
+
     getPosition() {
-        return { ...this.position };
+        return { x:this.x , y:this.y };
     }
     setPosition(position:IPosition) {
-        this.position = {...position};
+        this.x = position.x;
+        this.y = position.y;
     }
-    updateBy(position:IPosition) {
-        this.position.x += position.x;
-        this.position.y += position.y;
-    }
+    
     constructor(position:IPosition) {
-        this.position = {x:position.x , y:position.y};
+        // this.position = { x: position.x, y: position.y };
+        this.x = position.x;
+        this.y = position.y;
     }
 }
 
@@ -46,6 +78,37 @@ class Dimensions {
     constructor(dimensions:IDimensions) {
         this.width = dimensions.width;
         this.height = dimensions.height;
+    }
+}
+
+class Color {
+
+    private value: string;
+
+    get() {
+        return this.value;
+    }
+
+    set(value: string):string|false {
+        
+        const rgx = /#[abcdef0123456789]{3,6}/gi
+
+        if (rgx.test(value)) {
+            this.value = value;
+            return this.value ;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    constructor(value:string) {
+
+        const defaultColor:string = '#000';
+        const rgx = /#[abcdef0123456789]{3,6}/gi;
+
+        this.value = rgx.test(value) ? value : defaultColor ;
     }
 }
 
@@ -95,35 +158,45 @@ class EnemyPosition extends Position {
 }
 
 export abstract class Entity {
-    private position: Position;
-    private dimensions: Dimensions;
-
-    getPosition(): IPosition {
-        
-        const { x, y } = this.position.getPosition();
-        return { x ,y }; 
+    public position: Position;
+    // public movementVelocity: VelocityVector2;
+    public dimensions: Dimensions;
+    public color: Color;
+    public state: EntityState;
+    
+    public moveUp() {
+        const {x , y } = this.position.getPosition();
+        this.position.setPosition({x , y:y - 1});
     }
 
-    getDimensions():IDimensions {
-        return {...this.dimensions.get()};
+    public moveDown() {
+        const {x , y } = this.position.getPosition();
+        this.position.setPosition({x , y:y + 1});
+    }
+    public moveLeft() {
+        const {x , y } = this.position.getPosition();
+        this.position.setPosition({x:x - 1 , y});
+    }
+    public moveRight() {
+        const {x , y } = this.position.getPosition();
+        this.position.setPosition({x:x + 1 , y});
     }
 
     public update() {
-        this.position.updateBy({ x: 0, y: 0 });
+
     }
 
-    public render(ctx:CanvasRenderingContext2D) {
-
-        ctx.fillStyle = 'black';
-        const position = this.getPosition();
-        const dimensions = this.getDimensions();
-
-        ctx.fillRect(position.x, position.y, dimensions.width , dimensions.height);
+    public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
+        
+        renderer.renderSquare(ctx , this);
     }
     
     constructor(position:Position , dimensions:IDimensions) {
         this.position = position;
         this.dimensions = new Dimensions(dimensions);
+        this.color = new Color("#379");
+        this.state = new EntityState();
+        // this.movementVelocity = 
     }
 }
 
@@ -132,6 +205,8 @@ export abstract class Character extends Entity {
 }
 
 export class Player extends Character {
+
+
 
     constructor() {
         super(new PlayerPostion(0, 0), {width:100 , height:100});

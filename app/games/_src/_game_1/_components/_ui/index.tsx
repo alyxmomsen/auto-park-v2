@@ -62,16 +62,26 @@ const Game_1 = () => {
         setGame(MyGame.instanceGame());
 
         if (context.canvasContext && game) {
+
+            window.addEventListener("keydown", (e) => {
+                game.keyObserver.setKey(e.key);
+            });
+
+            window.addEventListener("keyup", (e) => {
+                game.keyObserver.removeKey(e.key);
+            });
             
             const ctx = context.canvasContext;
 
             const update = () => {
 
+                console.log(`${game.keyObserver.getAllKeys().toLocaleString()}`);
+                
                 ctx.fillStyle = 'ghostwhite';
                 ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-                game.player.render(ctx);
-                game.enemies.forEach(elem => elem.render(ctx));
+                game.update();
+                game.render(context.canvasContext);
 
                 window.requestAnimationFrame(update);
             }
