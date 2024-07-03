@@ -1,6 +1,5 @@
 'use client'
 
-import { mainContext } from '@/app/app/page';
 import React, { createContext, useContext, useEffect, useReducer, useRef, useState } from 'react'
 import MyGame from '../..';
 
@@ -18,8 +17,6 @@ const gameState:IGameState = {
     
 }
 
-// type TActionType = 'UPDATE_CANVAS_CONTEXT';
-
 const UPDATE_CANVAS_CONTEXT = 'UPDATE_CANVAS_CONTEXT';
 
 type Action = {
@@ -33,7 +30,6 @@ const updateCanvasContext =  (ctx:CanvasRenderingContext2D | null):Action => {
         type: UPDATE_CANVAS_CONTEXT,
         payload: ctx ,
     }
-
 }
 
 export const GameGlobalContext = createContext<IContextState>({gameState , dispatch:null});
@@ -81,8 +77,6 @@ const Game_1 = () => {
             }
 
             window.requestAnimationFrame(update);
-
-
         }
 
     } , [context.canvasContext , game]);

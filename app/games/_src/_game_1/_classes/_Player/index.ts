@@ -114,8 +114,6 @@ export abstract class Entity {
 
     public render(ctx:CanvasRenderingContext2D) {
 
-
-
         ctx.fillStyle = 'black';
         const position = this.getPosition();
         const dimensions = this.getDimensions();
@@ -127,13 +125,11 @@ export abstract class Entity {
         this.position = position;
         this.dimensions = new Dimensions(dimensions);
     }
-
 }
 
 export abstract class Character extends Entity {
 
 }
-
 
 export class Player extends Character {
 
