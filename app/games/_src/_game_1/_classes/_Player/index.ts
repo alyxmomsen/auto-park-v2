@@ -187,9 +187,9 @@ class MovementVelocity {
         }
     }
 
-    constructor() {
-        this.x = 0;
-        this.y = 0;
+    constructor(x:number , y:number) {
+        this.x = x;
+        this.y = y;
     }
 }
 
@@ -257,12 +257,12 @@ export abstract class Entity {
 		renderer.renderSquare(ctx, this);
 	}
 
-	constructor(position: Position, dimensions: IDimensions , color:Color , combat:Combat) {
+    constructor(position: Position, dimensions: IDimensions, color: Color, combat: Combat, movVel: {x:number , y:number}) {
 		this.position = position;
 		this.dimensions = new Dimensions(dimensions);
 		this.color = color;
 		this.state = new EntityState();
-        this.movementVelocity = new MovementVelocity();
+        this.movementVelocity = new MovementVelocity(movVel.x , movVel.y);
         this.combat = combat;
 	}
 }
@@ -274,7 +274,7 @@ export class Player extends Character {
         
     }
 	constructor() {
-		super(new PlayerPostion(0, 0), { width: 100, height: 100 } , new Color('#2a2869') , new Combat(100));
+        super(new PlayerPostion(0, 0), { width: 100, height: 100 }, new Color('#2a2869'), new Combat(100), {x:0 , y:0});
 	}
 }
 
@@ -283,6 +283,6 @@ export class Enemy extends Character {
         
     }
 	constructor() {
-		super(new EnemyPosition(100, 100), { width: 50, height: 50 } , new Color('#379') , new Combat(200));
+		super(new EnemyPosition(100, 100), { width: 50, height: 50 } , new Color('#379') , new Combat(200), {x:0 , y:0});
 	}
 }

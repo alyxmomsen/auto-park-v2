@@ -4,16 +4,16 @@ import { Renderer } from './_classes/_Renderer';
 import { Bullet } from './_classes/Bullet';
 
 export default class MyGame {
-	private static instance: MyGame | null = null;
+    private static instance: MyGame | null = null;
     private canvasContext: CanvasRenderingContext2D | null;
-	public keyObserver: KeyObserver;
-	public renderer: Renderer;
+    public keyObserver: KeyObserver;
+    public renderer: Renderer;
 
-	player: Player;
+    player: Player;
     enemies: Enemy[];
     bullets: Bullet[] = [];
     
-    private setCanvas(canvasContext:CanvasRenderingContext2D) {
+    private setCanvas(canvasContext: CanvasRenderingContext2D) {
         this.canvasContext = canvasContext;
     }
 
@@ -27,17 +27,40 @@ export default class MyGame {
 
     }
 
-	setEnemy() {
-		this.enemies.push(new Enemy());
+    setEnemy() {
+        this.enemies.push(new Enemy());
     }
 
-    makeBullet(entity:Entity) {
+    makeBullet(entity: Entity, positionDelta: {x:1|0|-1 , y:1|0|-1}) {
 
         const {x ,y } = this.player.position.getPosition();
+        const { width, height } = this.player.dimensions.get();
+        
+        const bulletStartSpeed = 50;
 
         if (entity.combat.isReady()) {
+
+            console.log(positionDelta , positionDelta.x * x);
             
-            this.bullets.push(new Bullet({x , y}));
+            this.bullets.push(new Bullet({
+                x: positionDelta.x !== 0
+                    ? positionDelta.x > 0
+                        ? x + (width * positionDelta.x) 
+                        : x
+                    : x  + (width / 2),
+                y:positionDelta.y !== 0
+                    ? positionDelta.y > 0
+                        ? y + (height * positionDelta.y) 
+                        : y 
+                    : y + (height / 2),
+            } , {
+                x: positionDelta.x !== 0
+                    ? positionDelta.x * bulletStartSpeed
+                    : 0,
+                y: positionDelta.y !== 0
+                    ? positionDelta.y * bulletStartSpeed
+                    : 0,
+            }));
         }
 
     }
@@ -56,12 +79,16 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('s') ? this.player.moveDown() : null;
 		this.keyObserver.getAllKeys().includes('a') ? this.player.moveLeft() : null;
         this.keyObserver.getAllKeys().includes('d') ? this.player.moveRight() : null;
-        this.keyObserver.getAllKeys().includes(' ') ? this.makeBullet(this.player) : null;
+        this.keyObserver.getAllKeys().includes('ArrowUp') ? this.makeBullet(this.player, {x:0 , y:-1}) : null;
+        this.keyObserver.getAllKeys().includes('ArrowDown') ? this.makeBullet(this.player, {x:0 , y:1}) : null;
+        this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeBullet(this.player, {x:-1 , y:0}) : null;
+        this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeBullet(this.player, {x:1 , y:0}) : null;
         
         /* --- */
 
         this.player.update();
         this.enemies.forEach(elem => elem.update());
+        this.bullets.forEach(elem => elem.update());
 	}
 
 	public render(ctx: CanvasRenderingContext2D | null) {
