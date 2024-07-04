@@ -1,5 +1,5 @@
 import { KeyObserver } from './_classes/_KeyObserver.ts';
-import { Enemy, Player } from './_classes/_Player';
+import { Enemy, Entity, Player } from './_classes/_Player';
 import { Renderer } from './_classes/_Renderer';
 import { Bullet } from './_classes/Bullet';
 
@@ -31,11 +31,15 @@ export default class MyGame {
 		this.enemies.push(new Enemy());
     }
 
-    makeBullet() {
+    makeBullet(entity:Entity) {
 
         const {x ,y } = this.player.position.getPosition();
 
-        this.bullets.push(new Bullet({x , y}));
+        if (entity.combat.isReady()) {
+            
+            this.bullets.push(new Bullet({x , y}));
+        }
+
     }
     
     init({canvasContext = null , size }:{canvasContext?:CanvasRenderingContext2D|null , size:number}) {
@@ -52,7 +56,7 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('s') ? this.player.moveDown() : null;
 		this.keyObserver.getAllKeys().includes('a') ? this.player.moveLeft() : null;
         this.keyObserver.getAllKeys().includes('d') ? this.player.moveRight() : null;
-        this.keyObserver.getAllKeys().includes(' ') ? this.makeBullet() : null;
+        this.keyObserver.getAllKeys().includes(' ') ? this.makeBullet(this.player) : null;
         
         /* --- */
 

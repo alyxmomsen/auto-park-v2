@@ -193,12 +193,34 @@ class MovementVelocity {
     }
 }
 
+export class Combat {
+    private last: number;
+    private firerate: number;
+    isReady(): boolean {
+        const now = Date.now();
+        const isReady = ((now - this.last) > this.firerate) ? true : false;
+        if (isReady) {
+            this.last = now;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    constructor(firerate:number) {
+        this.firerate = firerate;
+        this.last = 0;
+    }
+}
+
 export abstract class Entity {
 	public position: Position;
 	public movementVelocity: MovementVelocity;
 	public dimensions: Dimensions;
 	public color: Color;
     public state: EntityState;
+
+    public combat: Combat;
 
     private updatePositionByVelocity() {
         const { x, y } = this.position.getPosition();
@@ -224,6 +246,8 @@ export abstract class Entity {
         
     }
 
+    abstract fireBehavior():void
+
     public update() {
         this.updatePositionByVelocity();
         this.movementVelocity.collapseBy(.9);
@@ -233,25 +257,32 @@ export abstract class Entity {
 		renderer.renderSquare(ctx, this);
 	}
 
-	constructor(position: Position, dimensions: IDimensions , color:Color) {
+	constructor(position: Position, dimensions: IDimensions , color:Color , combat:Combat) {
 		this.position = position;
 		this.dimensions = new Dimensions(dimensions);
 		this.color = color;
 		this.state = new EntityState();
         this.movementVelocity = new MovementVelocity();
+        this.combat = combat;
 	}
 }
 
 export abstract class Character extends Entity {}
 
 export class Player extends Character {
+    fireBehavior() {
+        
+    }
 	constructor() {
-		super(new PlayerPostion(0, 0), { width: 100, height: 100 } , new Color('#2a2869'));
+		super(new PlayerPostion(0, 0), { width: 100, height: 100 } , new Color('#2a2869') , new Combat(100));
 	}
 }
 
 export class Enemy extends Character {
+    fireBehavior() {
+        
+    }
 	constructor() {
-		super(new EnemyPosition(100, 100), { width: 50, height: 50 } , new Color('#379'));
+		super(new EnemyPosition(100, 100), { width: 50, height: 50 } , new Color('#379') , new Combat(200));
 	}
 }
