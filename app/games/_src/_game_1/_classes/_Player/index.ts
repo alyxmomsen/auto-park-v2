@@ -1,4 +1,6 @@
-import { Renderer } from '../_Renderer/index.js';
+
+import { CollisionCase } from '../_Collision';
+import { Renderer } from '../_Renderer';
 
 interface IUpdateRender {
 	update(): void;
@@ -95,11 +97,25 @@ export class Color {
 		}
 	}
 
-	constructor(value: string) {
-		const defaultColor: string = '#000';
-		const rgx = /#[abcdef0123456789]{3,6}/gi;
+    constructor(value?: string) {
+        
+        if (value) {
+            
+            const defaultColor: string = '#000';
+            const rgx = /#[abcdef0123456789]{3,6}/gi;
+    
+            this.value = rgx.test(value) ? value : defaultColor;
+        }
+        else {
+            let randomcolor = '#';
+            const letters = '0123456789abcdef';
+            while (randomcolor.length < 7) {
+                randomcolor += letters[Math.floor(Math.random() * letters.length)];
+            }
 
-		this.value = rgx.test(value) ? value : defaultColor;
+            this.value =  randomcolor;
+        }
+
 	}
 }
 
@@ -141,76 +157,75 @@ class PlayerPostion extends Position {
 	}
 }
 
-
-
 class EnemyPosition extends Position {
 	constructor(x: number, y: number) {
 		super({ x, y });
 	}
 }
 
-interface IMovementVelocity {
-
-}
+interface IMovementVelocity {}
 
 class MovementVelocity {
-    private x: number;
-    private y: number;
-    private delta: number = 0.2;
+	private x: number;
+	private y: number;
+	private delta: number = 0.2;
 
-    getState() {
-        const { x , y , delta } = this;
-        return {
-            x , y , delta
-        }
-    }
+	getState() {
+		const { x, y, delta } = this;
+		return {
+			x,
+			y,
+			delta,
+		};
+	}
 
-    incrementBy(x:number , y:number) {
-        this.x = this.x + x;
-        this.y = this.y + y;
-    }
+	incrementBy(x: number, y: number) {
+		this.x = this.x + x;
+		this.y = this.y + y;
+	}
 
-    increment(axis: 'y' |'x') {
-        this[axis] = this[axis] + this.delta;
+	increment(axis: 'y' | 'x') {
+		this[axis] = this[axis] + this.delta;
+	}
+
+	decrement(axis: 'x' | 'y') {
+		this[axis] = this[axis] + -this.delta;
+	}
+
+	collapseBy(value: number) {
+		if (value < 1 && value >= 0) {
+			this.x = this.x * value;
+			this.y = this.y * value;
+		}
     }
     
-    decrement(axis: 'x' |'y') {
-        this[axis] = this[axis] + -this.delta;
-        
+    setXY() {
+
     }
 
-    collapseBy(value: number) {
-        if (value < 1 && value >= 0) {
-            
-            this.x = this.x * value;
-            this.y = this.y * value;
-        }
-    }
-
-    constructor(x:number , y:number) {
-        this.x = x;
-        this.y = y;
-    }
+	constructor(x: number, y: number) {
+		this.x = x;
+		this.y = y;
+	}
 }
 
 export class Combat {
-    private last: number;
-    private firerate: number;
-    isReady(): boolean {
-        const now = Date.now();
-        const isReady = ((now - this.last) > this.firerate) ? true : false;
-        if (isReady) {
-            this.last = now;
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    constructor(firerate:number) {
-        this.firerate = firerate;
-        this.last = 0;
-    }
+	private last: number;
+	private firerate: number;
+	isReady(): boolean {
+		const now = Date.now();
+		const isReady = now - this.last > this.firerate ? true : false;
+		if (isReady) {
+			this.last = now;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	constructor(firerate: number) {
+		this.firerate = firerate;
+		this.last = 0;
+	}
 }
 
 export abstract class Entity {
@@ -218,71 +233,107 @@ export abstract class Entity {
 	public movementVelocity: MovementVelocity;
 	public dimensions: Dimensions;
 	public color: Color;
-    public state: EntityState;
+	public state: EntityState;
 
-    public combat: Combat;
+	public combat: Combat;
 
-    private updatePositionByVelocity() {
-        const { x, y } = this.position.getPosition();
-        const { x:vX , y:vY } = this.movementVelocity.getState();
-		this.position.setPosition({ x:x + vX,y:y+vY  });
-    }
+	private updatePositionByVelocity() {
+		const { x, y } = this.position.getPosition();
+		const { x: vX, y: vY } = this.movementVelocity.getState();
+		this.position.setPosition({ x: x + vX, y: y + vY });
+	}
 
-    //move up === increment velocity
-    public moveUp() {
-        this.movementVelocity.decrement('y');
+	//move up === increment velocity
+	public moveUp() {
+		this.movementVelocity.decrement('y');
 	}
-    public moveDown() {
-        this.movementVelocity.increment('y');
+	public moveDown() {
+		this.movementVelocity.increment('y');
 	}
-    public moveLeft() {
-        this.movementVelocity.decrement('x');
+	public moveLeft() {
+		this.movementVelocity.decrement('x');
 	}
-    public moveRight() {
-        this.movementVelocity.increment('x');
-    }
-    //fire === ???
-    public fire() {
+	public moveRight() {
+		this.movementVelocity.increment('x');
+	}
+	//fire === ???
+	public fire() {}
+
+	abstract fireBehavior(): void;
+
+	public update(entities: Entity[]) {
+		//check collision
+        let collisionCases: CollisionCase[] = [];
+
+		const { x: myX, y: myY } = this.position.getPosition();
+        const { width: myWidth, height: myHeight } = this.dimensions.get();
+        const { delta:myDelta, x:myVX,y:myVY } = this.movementVelocity.getState();
+
+		for (const entity of entities) {
+			const { x, y } = entity.position.getPosition();
+            const { width, height } = entity.dimensions.get();
+            const { delta , x:vX , y:vY } = entity.movementVelocity.getState();
+
+			if (myX + myVX < x + width + vX && myX + myWidth + myVX > x + vX && myY + myVY < y + height + vY && myY + myHeight + myVY > y + vY) {
+                
+                collisionCases.push(new CollisionCase(this , entity))
+			}
+        }
         
-    }
+        if (collisionCases.length) {
+            
+            collisionCases.forEach(collisionCase => {
+                collisionCase.resolve();
+            });
 
-    abstract fireBehavior():void
+            this.updatePositionByVelocity();
+        }
+        else {
 
-    public update() {
-        this.updatePositionByVelocity();
-        this.movementVelocity.collapseBy(.9);
-    }
+            this.updatePositionByVelocity();
+        }
+
+		this.movementVelocity.collapseBy(0.9);
+	}
 
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
 		renderer.renderSquare(ctx, this);
 	}
 
-    constructor(position: Position, dimensions: IDimensions, color: Color, combat: Combat, movVel: {x:number , y:number}) {
+	constructor(
+		position: Position,
+		dimensions: IDimensions,
+		color: Color,
+		combat: Combat,
+		movVel: { x: number; y: number }
+	) {
 		this.position = position;
 		this.dimensions = new Dimensions(dimensions);
 		this.color = color;
 		this.state = new EntityState();
-        this.movementVelocity = new MovementVelocity(movVel.x , movVel.y);
-        this.combat = combat;
+		this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
+		this.combat = combat;
 	}
 }
 
 export abstract class Character extends Entity {}
 
 export class Player extends Character {
-    fireBehavior() {
-        
-    }
+	fireBehavior() {}
 	constructor() {
-        super(new PlayerPostion(0, 0), { width: 100, height: 100 }, new Color('#2a2869'), new Combat(100), {x:0 , y:0});
+		super(new PlayerPostion(0, 0), { width: 50, height: 100 }, new Color('#2a2869'), new Combat(50), {
+			x: 0,
+			y: 0,
+		});
 	}
 }
 
 export class Enemy extends Character {
-    fireBehavior() {
-        
-    }
+	fireBehavior() {}
 	constructor() {
-		super(new EnemyPosition(100, 100), { width: 50, height: 50 } , new Color('#379') , new Combat(200), {x:0 , y:0});
+		super(new EnemyPosition(100, 100), { width: 50, height: 50 }, new Color('#379'), new Combat(200), {
+			x: 0,
+			y: 0,
+		});
 	}
 }

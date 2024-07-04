@@ -68,15 +68,15 @@ const Game_1 = () => {
 
 			const ctx = context.canvasContext;
 
-			const update = () => {
-				console.log(`${game.keyObserver.getAllKeys().toLocaleString()}`);
-
-				ctx.fillStyle = 'ghostwhite';
-				ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+            const update = () => {
+                
 				game.update();
-				game.render(context.canvasContext);
-
+                
+				ctx.fillStyle = '#2e4f63';
+				ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                
+                game.render(context.canvasContext);
+                
 				window.requestAnimationFrame(update);
 			};
 
@@ -96,7 +96,6 @@ const Game_1 = () => {
 export default Game_1;
 
 const MyCanvas = () => {
-    
 	const canvasref = useRef<HTMLCanvasElement>(null);
 	const ctx = useContext(GameGlobalContext);
 
@@ -108,8 +107,8 @@ const MyCanvas = () => {
 		}
 	}, []);
 
-    const aspectRatioCoeff = 1080 / 1920; 
-    const width = 800;
-    const height = width * aspectRatioCoeff;
+	const aspectRatioCoeff = 1080 / 1920;
+	const width = 800;
+	const height = width * aspectRatioCoeff;
 	return <canvas ref={canvasref} width={width} height={height}></canvas>;
 };
