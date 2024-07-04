@@ -96,8 +96,8 @@ const Game_1 = () => {
 export default Game_1;
 
 const MyCanvas = () => {
+    
 	const canvasref = useRef<HTMLCanvasElement>(null);
-
 	const ctx = useContext(GameGlobalContext);
 
 	useEffect(() => {
@@ -108,5 +108,8 @@ const MyCanvas = () => {
 		}
 	}, []);
 
-	return <canvas ref={canvasref} width={400} height={400}></canvas>;
+    const aspectRatioCoeff = 1080 / 1920; 
+    const width = 800;
+    const height = width * aspectRatioCoeff;
+	return <canvas ref={canvasref} width={width} height={height}></canvas>;
 };

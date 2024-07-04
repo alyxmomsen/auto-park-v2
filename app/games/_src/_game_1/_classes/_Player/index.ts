@@ -36,7 +36,7 @@ class EntityState {
 	}
 }
 
-abstract class Position {
+export abstract class Position {
 	private x: number;
 	private y: number;
 
@@ -77,7 +77,7 @@ class Dimensions {
 	}
 }
 
-class Color {
+export class Color {
 	private value: string;
 
 	get() {
@@ -141,49 +141,104 @@ class PlayerPostion extends Position {
 	}
 }
 
+
+
 class EnemyPosition extends Position {
 	constructor(x: number, y: number) {
 		super({ x, y });
 	}
 }
 
+interface IMovementVelocity {
+
+}
+
+class MovementVelocity {
+    private x: number;
+    private y: number;
+    private delta: number = 0.2;
+
+    getState() {
+        const { x , y , delta } = this;
+        return {
+            x , y , delta
+        }
+    }
+
+    incrementBy(x:number , y:number) {
+        this.x = this.x + x;
+        this.y = this.y + y;
+    }
+
+    increment(axis: 'y' |'x') {
+        this[axis] = this[axis] + this.delta;
+    }
+    
+    decrement(axis: 'x' |'y') {
+        this[axis] = this[axis] + -this.delta;
+        
+    }
+
+    collapseBy(value: number) {
+        if (value < 1 && value >= 0) {
+            
+            this.x = this.x * value;
+            this.y = this.y * value;
+        }
+    }
+
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+    }
+}
+
 export abstract class Entity {
 	public position: Position;
-	// public movementVelocity: VelocityVector2;
+	public movementVelocity: MovementVelocity;
 	public dimensions: Dimensions;
 	public color: Color;
-	public state: EntityState;
+    public state: EntityState;
 
-	public moveUp() {
-		const { x, y } = this.position.getPosition();
-		this.position.setPosition({ x, y: y - 1 });
-	}
+    private updatePositionByVelocity() {
+        const { x, y } = this.position.getPosition();
+        const { x:vX , y:vY } = this.movementVelocity.getState();
+		this.position.setPosition({ x:x + vX,y:y+vY  });
+    }
 
-	public moveDown() {
-		const { x, y } = this.position.getPosition();
-		this.position.setPosition({ x, y: y + 1 });
+    //move up === increment velocity
+    public moveUp() {
+        this.movementVelocity.decrement('y');
 	}
-	public moveLeft() {
-		const { x, y } = this.position.getPosition();
-		this.position.setPosition({ x: x - 1, y });
+    public moveDown() {
+        this.movementVelocity.increment('y');
 	}
-	public moveRight() {
-		const { x, y } = this.position.getPosition();
-		this.position.setPosition({ x: x + 1, y });
+    public moveLeft() {
+        this.movementVelocity.decrement('x');
 	}
+    public moveRight() {
+        this.movementVelocity.increment('x');
+    }
+    //fire === ???
+    public fire() {
+        
+    }
 
-	public update() {}
+    public update() {
+        this.updatePositionByVelocity();
+        this.movementVelocity.collapseBy(.9);
+    }
 
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
 		renderer.renderSquare(ctx, this);
 	}
 
-	constructor(position: Position, dimensions: IDimensions) {
+	constructor(position: Position, dimensions: IDimensions , color:Color) {
 		this.position = position;
 		this.dimensions = new Dimensions(dimensions);
-		this.color = new Color('#379');
+		this.color = color;
 		this.state = new EntityState();
-		// this.movementVelocity =
+        this.movementVelocity = new MovementVelocity();
 	}
 }
 
@@ -191,12 +246,12 @@ export abstract class Character extends Entity {}
 
 export class Player extends Character {
 	constructor() {
-		super(new PlayerPostion(0, 0), { width: 100, height: 100 });
+		super(new PlayerPostion(0, 0), { width: 100, height: 100 } , new Color('#2a2869'));
 	}
 }
 
 export class Enemy extends Character {
 	constructor() {
-		super(new EnemyPosition(100, 100), { width: 50, height: 50 });
+		super(new EnemyPosition(100, 100), { width: 50, height: 50 } , new Color('#379'));
 	}
 }
