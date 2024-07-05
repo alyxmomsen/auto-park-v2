@@ -1,13 +1,11 @@
-import React from 'react'
+import React from 'react';
+import EffectorApp from './_components/EffectorApp';
 
 const Page = () => {
-    return (
-        <div>
-            <h1>Effector</h1>
-            <div>
-              content
-            </div>
-        </div>
-    )
-}
-export default Page ;
+	return (
+		<div>
+			<EffectorApp />
+		</div>
+	);
+};
+export default Page;
