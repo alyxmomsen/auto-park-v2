@@ -1,5 +1,7 @@
+import { Enemy } from './_classes/_Enemy';
+import { Entity } from './_classes/_Entity';
 import { KeyObserver } from './_classes/_KeyObserver.ts';
-import { Enemy, Entity, Player } from './_classes/_Player';
+import { Player } from './_classes/_Player';
 import { Renderer } from './_classes/_Renderer';
 import { Bullet } from './_classes/Bullet';
 

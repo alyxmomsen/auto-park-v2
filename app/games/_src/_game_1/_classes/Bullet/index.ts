@@ -1,4 +1,7 @@
-import { Character, Color, Combat, Position } from '../_Player';
+import { Character } from '../_Character';
+import { Color } from '../_Color';
+import { Combat } from '../_Combat';
+import { Position } from '../_Position';
 
 export class Bullet extends Character {
 	fireBehavior(): void {}
