@@ -16,24 +16,20 @@ export class Color {
 		}
 	}
 
-    constructor(value?: string) {
-        
-        if (value) {
-            
-            const defaultColor: string = '#000';
-            const rgx = /^#[abcdef0123456789]{3,6}$/i;
-    
-            this.value = rgx.test(value) ? value : defaultColor;
-        }
-        else {
-            let randomcolor = '#';
-            const letters = '0123456789abcdef';
-            while (randomcolor.length < 7) {
-                randomcolor += letters[Math.floor(Math.random() * letters.length)];
-            }
+	constructor(value?: string) {
+		if (value) {
+			const defaultColor: string = '#000';
+			const rgx = /^#[abcdef0123456789]{3,6}$/i;
 
-            this.value =  randomcolor;
-        }
+			this.value = rgx.test(value) ? value : defaultColor;
+		} else {
+			let randomcolor = '#';
+			const letters = '0123456789abcdef';
+			while (randomcolor.length < 7) {
+				randomcolor += letters[Math.floor(Math.random() * letters.length)];
+			}
 
+			this.value = randomcolor;
+		}
 	}
 }

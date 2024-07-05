@@ -31,11 +31,9 @@ export class MovementVelocity {
 			this.x = this.x * value;
 			this.y = this.y * value;
 		}
-    }
-    
-    setXY() {
+	}
 
-    }
+	setXY() {}
 
 	constructor(x: number, y: number) {
 		this.x = x;

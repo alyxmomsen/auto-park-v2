@@ -1,7 +1,7 @@
-import { Character } from "../_Character";
-import { Color } from "../_Color";
-import { Combat } from "../_Combat";
-import { Position } from "../_Position";
+import { Character } from '../_Character';
+import { Color } from '../_Color';
+import { Combat } from '../_Combat';
+import { Position } from '../_Position';
 
 export class EnemyPosition extends Position {
 	constructor(x: number, y: number) {

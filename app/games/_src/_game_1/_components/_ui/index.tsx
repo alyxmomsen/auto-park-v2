@@ -68,15 +68,14 @@ const Game_1 = () => {
 
 			const ctx = context.canvasContext;
 
-            const update = () => {
-                
+			const update = () => {
 				game.update();
-                
+
 				ctx.fillStyle = '#2e4f63';
 				ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                
-                game.render(context.canvasContext);
-                
+
+				game.render(context.canvasContext);
+
 				window.requestAnimationFrame(update);
 			};
 

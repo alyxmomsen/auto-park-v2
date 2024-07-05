@@ -1,3 +1,3 @@
-import { Entity } from "../_Entity";
+import { Entity } from '../_Entity';
 
 export abstract class Character extends Entity {}

@@ -82,12 +82,16 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeBullet(this.player, { x: -1, y: 0 }) : null;
 		this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeBullet(this.player, { x: 1, y: 0 }) : null;
 
-        if (this.bullets.length > 100) this.bullets.shift();
+		if (this.bullets.length > 100) this.bullets.shift();
 		/* --- */
 
 		this.player.update([...this.enemies, ...this.bullets]);
-		this.enemies.forEach((elem) => elem.update([this.player, ...this.bullets , ...this.enemies.filter(enemy => enemy !== elem)]));
-		this.bullets.forEach((elem) => elem.update([this.player, ...this.enemies , ...this.bullets.filter(bullet => bullet !== elem)]));
+		this.enemies.forEach((elem) =>
+			elem.update([this.player, ...this.bullets, ...this.enemies.filter((enemy) => enemy !== elem)])
+		);
+		this.bullets.forEach((elem) =>
+			elem.update([this.player, ...this.enemies, ...this.bullets.filter((bullet) => bullet !== elem)])
+		);
 	}
 
 	public render(ctx: CanvasRenderingContext2D | null) {

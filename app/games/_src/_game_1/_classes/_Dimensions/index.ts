@@ -1,4 +1,4 @@
-import { IDimensions } from "../../types";
+import { IDimensions } from '../../types';
 
 export class Dimensions {
 	private width: number;

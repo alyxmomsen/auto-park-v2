@@ -3,7 +3,7 @@ export class Combat {
 	private firerate: number;
 	isReady(): boolean {
 		const now = Date.now();
-		const isReady = (now - this.last > this.firerate) ;
+		const isReady = now - this.last > this.firerate;
 		if (isReady) {
 			this.last = now;
 			return true;

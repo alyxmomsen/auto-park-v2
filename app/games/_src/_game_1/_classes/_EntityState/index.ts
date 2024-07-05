@@ -1,4 +1,4 @@
-import { MovingX, MovingY } from "../../types";
+import { MovingX, MovingY } from '../../types';
 
 export class EntityState {
 	protected moving: [MovingX, MovingY];

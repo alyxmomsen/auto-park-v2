@@ -1,4 +1,3 @@
-
 import { Character } from '../_Character';
 import { Color } from '../_Color';
 import { Combat } from '../_Combat';
@@ -14,11 +13,9 @@ class PlayerPostion extends Position {
 export class Player extends Character {
 	fireBehavior() {}
 	constructor() {
-		super(new PlayerPostion(0, 0), { width: 50, height: 100 }, new Color('#2a2869'), new Combat(50), {
+		super(new PlayerPostion(0, 0), { width: 50, height: 100 }, new Color('#2a2869'), new Combat(100), {
 			x: 0,
 			y: 0,
 		});
 	}
 }
-
-

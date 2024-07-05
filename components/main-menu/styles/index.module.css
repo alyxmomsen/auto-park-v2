@@ -12,3 +12,8 @@
 .menu__item:hover {
     color:white;
 }
+
+.menu__item_wrapper {
+    display: flex;
+    gap:9px;
+}

@@ -1,12 +1,12 @@
-import { IDimensions } from "../../types";
-import { CollisionCase } from "../_Collision";
-import { Color } from "../_Color";
-import { Combat } from "../_Combat";
-import { Dimensions } from "../_Dimensions";
-import { EntityState } from "../_EntityState";
-import { MovementVelocity } from "../_MovementVelocity";
-import { Position } from "../_Position";
-import { Renderer } from "../_Renderer";
+import { IDimensions } from '../../types';
+import { Color } from '../_Color';
+import { Combat } from '../_Combat';
+import { Dimensions } from '../_Dimensions';
+import { EntityState } from '../_EntityState';
+import { MovementVelocity } from '../_MovementVelocity';
+import { Position } from '../_Position';
+import { Renderer } from '../_Renderer';
+import { Collider } from '../_Collider';
 
 export abstract class Entity {
 	public position: Position;
@@ -43,36 +43,19 @@ export abstract class Entity {
 
 	public update(entities: Entity[]) {
 		//check collision
-        let collisionCases: CollisionCase[] = [];
-
-		const { x: myX, y: myY } = this.position.getPosition();
-        const { width: myWidth, height: myHeight } = this.dimensions.get();
-        const { delta:myDelta, x:myVX,y:myVY } = this.movementVelocity.getState();
+		const collider = new Collider(this);
 
 		for (const entity of entities) {
-			const { x, y } = entity.position.getPosition();
-            const { width, height } = entity.dimensions.get();
-            const { delta , x:vX , y:vY } = entity.movementVelocity.getState();
+			collider.test(entity);
+		}
 
-			if (myX + myVX < x + width + vX && myX + myWidth + myVX > x + vX && myY + myVY < y + height + vY && myY + myHeight + myVY > y + vY) {
-                
-                collisionCases.push(new CollisionCase(this , entity))
-			}
-        }
-        
-        if (collisionCases.length) {
-            
-            collisionCases.forEach(collisionCase => {
-                collisionCase.resolve();
-            });
-
+		if (collider.getCollisions().length) {
+			
 			// !!!!!!!!
-            this.updatePositionByVelocity();
-        }
-        else {
-
-            this.updatePositionByVelocity();
-        }
+			// this.updatePositionByVelocity();
+		} else {
+			this.updatePositionByVelocity();
+		}
 
 		this.movementVelocity.collapseBy(0.9);
 	}

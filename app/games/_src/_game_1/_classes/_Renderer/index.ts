@@ -1,4 +1,4 @@
-import { Entity } from "../_Entity";
+import { Entity } from '../_Entity';
 // why it is the Singleton
 export class Renderer {
 	renderSquare(ctx: CanvasRenderingContext2D, entity: Entity) {
