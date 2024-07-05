@@ -6,7 +6,7 @@ export class Color {
 	}
 
 	set(value: string): string | false {
-		const rgx = /#[abcdef0123456789]{3,6}/gi;
+		const rgx = /^#[abcdef0123456789]{3,6}$/i;
 
 		if (rgx.test(value)) {
 			this.value = value;
@@ -21,7 +21,7 @@ export class Color {
         if (value) {
             
             const defaultColor: string = '#000';
-            const rgx = /#[abcdef0123456789]{3,6}/gi;
+            const rgx = /^#[abcdef0123456789]{3,6}$/i;
     
             this.value = rgx.test(value) ? value : defaultColor;
         }

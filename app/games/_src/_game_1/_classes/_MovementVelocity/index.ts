@@ -25,6 +25,7 @@ export class MovementVelocity {
 		this[axis] = this[axis] + -this.delta;
 	}
 
+	// must to renamed
 	collapseBy(value: number) {
 		if (value < 1 && value >= 0) {
 			this.x = this.x * value;

@@ -1,4 +1,4 @@
-import { Entity } from "../_Player";
+import { Entity } from "../_Entity";
 
 export class CollisionCase {
 

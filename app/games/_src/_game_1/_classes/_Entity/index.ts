@@ -66,6 +66,7 @@ export abstract class Entity {
                 collisionCase.resolve();
             });
 
+			// !!!!!!!!
             this.updatePositionByVelocity();
         }
         else {

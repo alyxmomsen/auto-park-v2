@@ -1,7 +1,3 @@
-export interface IUpdateRender {
-	update(): void;
-	render(): void;
-}
 
 export interface IPosition {
 	x: number;

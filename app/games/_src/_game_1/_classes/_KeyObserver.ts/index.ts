@@ -1,3 +1,4 @@
+// the keeper of the keys )) 
 export class KeyObserver {
 	private keys: string[];
 	private static instance: KeyObserver | null = null;

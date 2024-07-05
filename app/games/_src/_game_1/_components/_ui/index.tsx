@@ -108,7 +108,7 @@ const MyCanvas = () => {
 	}, []);
 
 	const aspectRatioCoeff = 1080 / 1920;
-	const width = 800;
+	const width = 1200;
 	const height = width * aspectRatioCoeff;
 	return <canvas ref={canvasref} width={width} height={height}></canvas>;
 };

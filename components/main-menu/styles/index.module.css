@@ -1,0 +1,14 @@
+.main {
+    background-color: blueviolet;
+    display: flex;
+    gap:19px;
+    justify-content:center;
+}
+
+.menu__item {
+    text-transform: uppercase;
+}
+
+.menu__item:hover {
+    color:white;
+}
