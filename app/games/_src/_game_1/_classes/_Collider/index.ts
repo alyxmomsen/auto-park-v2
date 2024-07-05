@@ -9,8 +9,6 @@ export class Collider {
 	private paramsA: IEntityParams | null;
     private paramsB: IEntityParams | null;
     
-    private isCollided: boolean;
-
     private collisions: Entity[];
 
 	private setSubject(obj: Entity) {
@@ -25,15 +23,6 @@ export class Collider {
     public getCollisions() {
         return this.collisions;
     }
-
-	setA(obj: Entity) {
-		this.objA = obj;
-		this.paramsA = {
-			position: obj.position.getPosition(),
-			dimensions: obj.dimensions.get(),
-			velocity: obj.movementVelocity.getState(),
-		};
-	}
 
     test(obj: Entity): void {
         
@@ -60,7 +49,6 @@ export class Collider {
 
     constructor(a: Entity, b?: Entity) {
         this.collisions = [];
-        this.isCollided = false;
 		this.objA = a;
 		this.subject = b ? b : null;
 		this.paramsA = {
