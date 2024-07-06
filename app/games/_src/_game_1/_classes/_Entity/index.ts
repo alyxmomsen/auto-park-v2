@@ -1,6 +1,6 @@
 import { IDimensions } from '../../types';
 import { Color } from '../_Color';
-import { Combat } from '../_Combat';
+import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
 import { Dimensions } from '../_Dimensions';
 import { EntityState } from '../_EntityState';
 import { MovementVelocity } from '../_MovementVelocity';
@@ -9,6 +9,11 @@ import { Renderer } from '../_Renderer';
 import { Collider } from '../_Collider';
 
 export abstract class Entity {
+	protected title: string = 'untitle';
+
+	public getTitle() {
+		return this.title;
+	}
 	public position: Position;
 	public movementVelocity: MovementVelocity;
 	public dimensions: Dimensions;
@@ -16,6 +21,35 @@ export abstract class Entity {
 	public state: EntityState;
 
 	public combat: Combat;
+	private combatVariants: Combat[] = [
+		new MinigunCombat(),
+		new GunCombat(),
+		new NoCombat(),
+	];
+
+	private setCombat() {
+		
+		if (this.combatVariants.length) {
+			this.combat = this.combatVariants[0];
+		}
+	}
+
+	public changeCombat() {
+		
+		if (this.combatVariants.length) {
+			if (this.combatVariants.length > 1) {
+
+				const spliced = this.combatVariants.splice(0, 1);
+
+				this.combatVariants = [...this.combatVariants, ...spliced]; 
+				this.setCombat();
+			}
+		}
+	}
+
+	public addCombat() {
+		
+	}
 
 	private updatePositionByVelocity() {
 		const { x, y } = this.position.getPosition();
@@ -77,5 +111,8 @@ export abstract class Entity {
 		this.state = new EntityState();
 		this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
 		this.combat = combat;
+		this.setCombat();
 	}
 }
+
+

@@ -34,15 +34,19 @@ export class Collider {
 
 		if (
 			this.paramsA.position.x + this.paramsA.velocity.x <
-				this.paramsB.position.x + this.paramsB.dimensions.width + this.paramsB.velocity.x &&
+				this.paramsB.position.x + this.paramsB.dimensions.width/*  + this.paramsB.velocity.x */ &&
 			this.paramsA.position.x + this.paramsA.dimensions.width + this.paramsA.velocity.x >
-				this.paramsB.position.x + this.paramsB.velocity.x &&
+				this.paramsB.position.x/*  + this.paramsB.velocity.x  */&&
 			this.paramsA.position.y + this.paramsA.velocity.y <
-				this.paramsB.position.y + this.paramsB.dimensions.height + this.paramsB.velocity.y &&
+				this.paramsB.position.y + this.paramsB.dimensions.height/*  + this.paramsB.velocity.y  */&&
 			this.paramsA.position.y + this.paramsA.dimensions.height + this.paramsA.velocity.y >
-				this.paramsB.position.y + this.paramsB.velocity.y
+				this.paramsB.position.y/*  + this.paramsB.velocity.y */
         ) {
-            this.collisions.push(this.subject);
+			this.collisions.push(this.subject);
+			
+			const ax = this.objA.movementVelocity.getState().x;
+			const bx = this.subject.movementVelocity.getState().x;
+			const summ = ax + bx;
         }
         
 	}
