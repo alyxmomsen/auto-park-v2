@@ -26,8 +26,8 @@ export default class MyGame {
 		}
 	}
 
-	setEnemy() {
-		this.enemies.push(new Enemy());
+	setEnemy({ position }: { position: { x: number; y: number } }) {
+		this.enemies.push(new Enemy({ position }));
 	}
 
 	makeBullet(entity: Entity, positionDelta: { x: 1 | 0 | -1; y: 1 | 0 | -1 }) {
@@ -112,7 +112,11 @@ export default class MyGame {
 
 	private constructor() {
 		this.player = new Player();
-		this.enemies = [];
+		this.enemies = [
+			new Enemy({ position: { x: 100, y: 100 } }),
+			new Enemy({ position: { x: 400, y: 400 } }),
+			// new Enemy({ position: {x:800 , y:800} }) ,
+		];
 		this.keyObserver = KeyObserver.getInstance();
 		this.renderer = Renderer.getInstance();
 		this.canvasContext = null;

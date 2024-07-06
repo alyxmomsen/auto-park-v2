@@ -18,27 +18,23 @@ export abstract class Combat {
 }
 
 export class MinigunCombat extends Combat {
-	
 	constructor() {
 		super(50);
 	}
 }
 
 export class GunCombat extends Combat {
-	
 	constructor() {
 		super(300);
 	}
 }
 
 export class NoCombat extends Combat {
-
 	isReady(): boolean {
 		return false;
 	}
-	
+
 	constructor() {
 		super(Infinity);
 	}
 }
-

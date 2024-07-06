@@ -5,6 +5,4 @@ import { Entity } from '../_Entity';
 import { Player, PlayerPostion } from '../_Player';
 import { Position } from '../_Position';
 
-export abstract class Character extends Entity { }
-
-
+export abstract class Character extends Entity {}

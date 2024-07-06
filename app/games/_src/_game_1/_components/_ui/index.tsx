@@ -50,10 +50,11 @@ const Game_1 = () => {
 	const [game, setGame] = useState<MyGame | null>(null);
 
 	useEffect(() => {
-		(() => {
-			const gameInstance = MyGame.instanceGame();
-			gameInstance?.setEnemy();
-		})();
+		console.log('effect');
+		// (() => {
+		// 	const gameInstance = MyGame.instanceGame();
+		// 	gameInstance?.setEnemy();
+		// })();
 
 		setGame(MyGame.instanceGame());
 
