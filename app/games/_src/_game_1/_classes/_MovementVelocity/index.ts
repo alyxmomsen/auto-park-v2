@@ -12,6 +12,11 @@ export class MovementVelocity {
 		};
 	}
 
+	set(x:number , y:number) {
+		this.x = x;
+		this.y = y;
+	}
+
 	incrementBy(x: number, y: number) {
 		this.x = this.x + x;
 		this.y = this.y + y;

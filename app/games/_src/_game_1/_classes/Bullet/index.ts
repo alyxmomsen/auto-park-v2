@@ -1,6 +1,6 @@
 import { Character } from '../_Character';
 import { Color } from '../_Color';
-import { Combat } from '../_Combat';
+import { Combat, NoCombat } from '../_Combat';
 import { Position } from '../_Position';
 
 export class Bullet extends Character {
@@ -11,8 +11,9 @@ export class Bullet extends Character {
 			new BulletPosition(position.x, position.y),
 			{ width: 25, height: 25 },
 			new Color(/* '#9c3278' */),
-			new Combat(200),
-			movVelo
+			new NoCombat(),
+			movVelo, 
+			"bullet",
 		);
 	}
 }

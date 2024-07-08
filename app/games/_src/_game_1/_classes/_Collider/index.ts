@@ -11,6 +11,7 @@ interface ICollisionItemState {
 	height: number;
 	velocityX: number;
 	velocityY: number;
+	subject: Entity;
 }
 
 export class Collider {
@@ -29,7 +30,7 @@ export class Collider {
 			main_items.top + main_items.velocityY < subj_items.bottom + subj_items.velocityY &&
 			main_items.bottom + main_items.velocityY > subj_items.top + subj_items.velocityY
 		) {
-			this.collisions.push(new Collision(this.main, main_items, entity, subj_items));
+			this.collisions.push(new Collision({ subj: this.main, state: main_items }, {subj:entity , state:subj_items}));
 		}
 	}
 
@@ -51,6 +52,7 @@ export class Collider {
 			height: dimensions.height,
 			velocityX: velocity.x,
 			velocityY: velocity.y,
+			subject: entity,
 		};
 	}
 
@@ -71,35 +73,17 @@ export class Collision {
 	};
 
 	resolve() {
-		if (this.subjectA.state.left > this.subjectB.state.right) {
-			const dive =
-				this.subjectB.state.right +
-				this.subjectB.state.velocityX -
-				(this.subjectA.state.left + this.subjectA.state.velocityX);
-			// console.log(dive);
+		const diffX = this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.left + this.subjectA.state.velocityX;
+		const diffY = this.subjectA.state.top + this.subjectA.state.velocityX - this.subjectB.state.top + this.subjectA.state.velocityX;
+		const collisionVector = Math.sqrt((diffX ** 2) + (diffY ** 2));
 
-			this.subjectA.subj.position.setPosition({
-				x: this.subjectA.state.left + (this.subjectA.state.velocityX + dive / 2),
-				y: this.subjectA.state.top,
-			});
-			this.subjectB.subj.position.setPosition({
-				x: this.subjectB.state.left + (this.subjectA.state.velocityX - dive / 2),
-				y: this.subjectB.state.top,
-			});
-		}
-		// else if (this.subjectA.state.right < this.subjectB.state.left) {
-
-		// }
+		
+		console.log();
 	}
 
-	constructor(subjectA: Entity, stateA: ICollisionItemState, subjectB: Entity, stateB: ICollisionItemState) {
-		this.subjectA = {
-			subj: subjectA,
-			state: stateA,
-		};
-		this.subjectB = {
-			subj: subjectB,
-			state: stateB,
-		};
+	constructor(subjectA: { subj:Entity , state:ICollisionItemState} , subjectB: { subj:Entity , state:ICollisionItemState}) {
+		this.subjectA = subjectA ;
+		this.subjectB = subjectB ;
 	}
 }
+

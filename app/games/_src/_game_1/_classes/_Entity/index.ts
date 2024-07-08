@@ -9,7 +9,7 @@ import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
 export abstract class Entity {
-	protected title: string = 'untitle';
+	protected title: string;
 
 	public getTitle() {
 		return this.title;
@@ -86,7 +86,7 @@ export abstract class Entity {
 			this.updatePositionByVelocity();
 		}
 
-		this.movementVelocity.collapseBy(0.9);
+		this.movementVelocity.collapseBy(0.95);
 	}
 
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
@@ -98,7 +98,8 @@ export abstract class Entity {
 		dimensions: IDimensions,
 		color: Color,
 		combat: Combat,
-		movVel: { x: number; y: number }
+		movVel: { x: number; y: number },
+		title: string 
 	) {
 		this.position = position;
 		this.dimensions = new Dimensions(dimensions);
@@ -107,5 +108,6 @@ export abstract class Entity {
 		this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
 		this.combat = combat;
 		this.setCombat();
+		this.title = title;
 	}
 }

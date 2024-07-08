@@ -15,6 +15,6 @@ export class Enemy extends Character {
 		super(new EnemyPosition(x, y), { width: 50, height: 50 }, new Color('#379'), new GunCombat(), {
 			x: 0,
 			y: 0,
-		});
+		} , "enemy");
 	}
 }
