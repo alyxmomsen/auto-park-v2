@@ -1,3 +1,4 @@
+import { DebugEntity } from './_classes/_DebugEntity';
 import { Enemy } from './_classes/_Enemy';
 import { Entity } from './_classes/_Entity';
 import { KeyObserver } from './_classes/_KeyObserver.ts';
@@ -14,6 +15,7 @@ export default class MyGame {
 	player: Player;
 	enemies: Enemy[];
 	bullets: Bullet[] = [];
+	debugEntity: DebugEntity;
 
 	private setCanvas(canvasContext: CanvasRenderingContext2D) {
 		this.canvasContext = canvasContext;
@@ -86,6 +88,7 @@ export default class MyGame {
 		/* --- */
 
 		this.player.update([...this.enemies, ...this.bullets]);
+
 		this.enemies.forEach((elem) =>
 			elem.update([this.player, ...this.bullets, ...this.enemies.filter((enemy) => enemy !== elem)])
 		);
@@ -111,15 +114,16 @@ export default class MyGame {
 	}
 
 	private constructor() {
-		this.player = new Player({ position: {x:300 , y:300} });
+		this.player = new Player({ position: { x: 300, y: 300 } });
 		this.enemies = [
-			// new Enemy({ position: { x: 100, y: 100 } }),
+			new Enemy({ position: { x: 100, y: 100 } }),
 			new Enemy({ position: { x: 600, y: 300 } }),
 			// new Enemy({ position: {x:800 , y:800} }) ,
 		];
 		this.keyObserver = KeyObserver.getInstance();
 		this.renderer = Renderer.getInstance();
 		this.canvasContext = null;
+		this.debugEntity = new DebugEntity({ position: {x:-100 , y:-100} });
 	}
 }
 

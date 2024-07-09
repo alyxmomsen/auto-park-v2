@@ -59,7 +59,6 @@ const Game_1 = () => {
 		setGame(MyGame.instanceGame());
 
 		if (context.canvasContext && game) {
-
 			console.log('get start');
 			window.addEventListener('keydown', (e) => {
 				game.keyObserver.setKey(e.key);

@@ -2,6 +2,7 @@ import { IDimensions } from '../../types';
 import { Collider } from '../_Collider';
 import { Color } from '../_Color';
 import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
+import { DebugEntity, IDebugEntity } from '../_DebugEntity';
 import { Dimensions } from '../_Dimensions';
 import { EntityState } from '../_EntityState';
 import { Movement } from '../_Movement';
@@ -9,9 +10,13 @@ import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
-export abstract class Entity {
+export abstract class Entity implements IDebugEntity {
+
 	private static numberOfInstncies: number = 0;
 	protected title: string;
+
+	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void 
+	public abstract setDebugEntityPosition(x: number, y: number): void;
 
 	public setNoI() {
 		Entity.numberOfInstncies += 1;
@@ -77,7 +82,7 @@ export abstract class Entity {
 
 	abstract fireBehavior(): void;
 
-	public update(entities: Entity[]) {
+	public update(entities: Entity[] ) {
 		const collider = new Collider(this);
 
 		entities.forEach((entity) => {
@@ -99,10 +104,14 @@ export abstract class Entity {
 		}
 
 		this.movement.velocity.collapseBy(0.95);
+
+		// this.renderDebug();
 	}
 
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
 		renderer.renderSquare(ctx, this);
+
+		this.renderDebug(ctx , renderer);
 	}
 
 	constructor(
@@ -123,7 +132,9 @@ export abstract class Entity {
 		this.title = title;
 		this.movement = new Movement({
 			position,
-			velocity:new MovementVelocity(movVel.x, movVel.y)
+			velocity: new MovementVelocity(movVel.x, movVel.y),
 		});
+
+		
 	}
 }

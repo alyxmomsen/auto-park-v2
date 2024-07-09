@@ -1,6 +1,8 @@
 import { headers } from 'next/headers';
 import { IEntityParams } from '../../types';
 import { Entity } from '../_Entity';
+import { Renderer } from '../_Renderer';
+import { DebugEntity } from '../_DebugEntity';
 
 interface ICollisionItemState {
 	left: number;
@@ -27,7 +29,6 @@ export class Collider {
 		const subj_items = this.getMovementItems(entity);
 
 		const checkCollision = () => {
-
 			if (
 				main_items.left + main_items.velocityX < subj_items.right + subj_items.velocityX &&
 				main_items.right + main_items.velocityX > subj_items.left + subj_items.velocityX &&
@@ -38,59 +39,70 @@ export class Collider {
 					new Collision({ subj: this.main, state: main_items }, { subj: entity, state: subj_items })
 				);
 			}
-		}
+		};
 
-
-		const checkCollision__ = ({x,y}:{x:number , y:number}) => {
-
+		const checkCollision__ = ({ x, y }: { x: number; y: number }) => {
 			if (
 				main_items.left + x < subj_items.right + subj_items.velocityX &&
 				main_items.right + x > subj_items.left + subj_items.velocityX &&
 				main_items.top + y < subj_items.bottom + subj_items.velocityY &&
 				main_items.bottom + y > subj_items.top + subj_items.velocityY
 			) {
+				/* if(this.main.getTitle() === 'player')  */subj_items.subject.setDebugEntityPosition(main_items.left + x , main_items.top + y);
 				return true;
 			}
 
+			// if(this.main.getTitle() === 'player') subj_items.subject.setDebugEntityPosition(main_items.left + x , main_items.top + y);
 			return false;
-		}
-
+		};
 
 		const foo = () => {
-		
-		
 			const testByX = () => {
+				// const x = subj_items.left + subj_items.velocityX - main_items.width;
+				const newVectorX = subj_items.left + subj_items.velocityX - (main_items.right - main_items.velocityX);
+				const getNewVectorY = (newVectorX: number) =>
+					(main_items.velocityY / main_items.velocityX) * newVectorX;
+				// const y = main_items.left + getNewVectorY(newVectorX);
 
-				const x = subj_items.left + subj_items.velocityX - main_items.width;
-				const newVectorX = (subj_items.left + subj_items.velocityX) - (main_items.right + main_items.velocityX);
-				const getNewVectorY = (newVectorX: number) => (main_items.velocityY / main_items.velocityX) * newVectorX;
-				const y = main_items.left + getNewVectorY(newVectorX);
-				
 				return {
-					x: newVectorX, y: getNewVectorY(newVectorX) ,
-				}
-			}
+					x: newVectorX,
+					y: getNewVectorY(newVectorX),
+				};
+			};
 
 			const testByY = () => {
-
-				const y = subj_items.top - main_items.height;
-				const newVectorY = (subj_items.top + subj_items.velocityY) - (main_items.bottom + main_items.velocityY);
+				// const y = subj_items.top - main_items.height;
+				const newVectorY = subj_items.top + subj_items.velocityY - (main_items.bottom - main_items.velocityY);
 				// const getNewVectorY = (newVectorX: number) => (subj_items.velocityY / subj_items.velocityX) * newVectorX;
-				const getNewVectorX = (newVectorY: number) => (main_items.velocityX / main_items.velocityY) * newVectorY;
-				const x = main_items.top + getNewVectorX(newVectorY);
-				
+				const getNewVectorX = (newVectorY: number) =>
+					(main_items.velocityX / main_items.velocityY) * newVectorY;
+				// const x = main_items.top + getNewVectorX(newVectorY);
+
 				return {
-					x:getNewVectorX(newVectorY), y:newVectorY
-				}
-			}
-			
-			const case_1 = checkCollision__(testByX());
-			const case_2 = checkCollision__(testByY());
+					x: getNewVectorX(newVectorY),
+					y: newVectorY,
+				};
+			};
 
-			return `x: ${case_1 ? 'true' : 'false'} ,y:${case_2 ? 'true': 'false'}`
+			const tBX = testByX();
+			const tBY = testByY();
+
+			const case_2 = true && checkCollision__(tBY);
+			const case_1 = true && checkCollision__(tBX);
+
+			return `x: ${case_1 ? 'true' : 'false'} \n,y:${case_2 ? 'true' : 'false'} \nmain: \nvx${main_items.velocityX} , \nvy${main_items.velocityY} \ntestx:${true && JSON.stringify(tBX)} \ntesty:${true && JSON.stringify(tBY)}`;
+		};
+
+		if (this.main.getTitle() === 'player') {
+			// console.clear();
+
+			const debugStr = foo();
+			console
+				.log
+				(
+					debugStr
+				);
 		}
-
-		if(this.main.getTitle() === "player") console.log(foo());
 	}
 
 	getCollisions() {
@@ -112,12 +124,12 @@ export class Collider {
 			velocityX: velocity.x,
 			velocityY: velocity.y,
 			subject: entity,
-			vectorModule: Math.sqrt(velocity.x ** 2 + velocity.y ** 2) ,
-			vectorAngle: Math.atan2(velocity.y, velocity.x) * (180 / Math.PI) , // Угол в градусах
+			vectorModule: Math.sqrt(velocity.x ** 2 + velocity.y ** 2),
+			vectorAngle: Math.atan2(velocity.y, velocity.x) * (180 / Math.PI), // Угол в градусах
 		};
 	}
 
-	constructor(mainEntity: Entity) {
+	constructor(mainEntity: Entity , debugEntity?:DebugEntity) {
 		this.main = mainEntity;
 		this.collisions = [];
 	}
@@ -134,18 +146,14 @@ export class Collision {
 		state: ICollisionItemState;
 	};
 
-	resolution() {
-		
-
-	}
+	resolution() {}
 
 	constructor(
 		subjectA: { subj: Entity; state: ICollisionItemState },
-		subjectB: { subj: Entity; state: ICollisionItemState }
+		subjectB: { subj: Entity; state: ICollisionItemState },
+		debugEntity?: DebugEntity ,
 	) {
 		this.subjectA = subjectA;
 		this.subjectB = subjectB;
 	}
 }
-
-
