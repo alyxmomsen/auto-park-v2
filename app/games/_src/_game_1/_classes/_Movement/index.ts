@@ -5,14 +5,26 @@ import { Position } from "../_Position";
 export class Movement {
 
     // private nextPosition
-    position: Position;
+    positionOfOrigin: Position;
     velocity: MovementVelocity;
+
+    getNextPositionByVelocity() {
+
+        const {x:pX , y:pY} = this.positionOfOrigin.getPosition();
+        const { x: vX, y: vY } = this.velocity.getState();
+        
+
+        return {
+            x: pX + vX,
+            y: pY + vY ,
+        } 
+    }
 
     constructor({position , velocity}:{
         position: Position;
         velocity: MovementVelocity;
     }) {
-        this.position = position;
+        this.positionOfOrigin = position;
         this.velocity = velocity;
     }
 }

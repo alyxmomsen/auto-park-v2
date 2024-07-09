@@ -54,9 +54,9 @@ export abstract class Entity {
 	public addCombat() {}
 
 	private updatePositionByVelocity() {
-		const { x, y } = this.movement.position.getPosition();
+		const { x, y } = this.movement.positionOfOrigin.getPosition();
 		const { x: vX, y: vY } = this.movement.velocity.getState();
-		this.movement.position.setPosition({ x: x + vX, y: y + vY });
+		this.movement.positionOfOrigin.setPosition({ x: x + vX, y: y + vY });
 	}
 
 	//move up === increment velocity
