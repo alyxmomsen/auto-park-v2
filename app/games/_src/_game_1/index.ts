@@ -36,10 +36,9 @@ export default class MyGame {
 		const { x, y } = this.player.movement.positionOfOrigin.getPosition();
 		const { width, height } = this.player.dimensions.get();
 
-		const bulletStartSpeed = 50;
+		const bulletStartSpeed = 100;
 
 		if (this.player.combat.isReady()) {
-			
 			this.bullets.push(
 				new Bullet(
 					{
@@ -57,8 +56,8 @@ export default class MyGame {
 								: y + height / 2,
 					},
 					{
-						x: positionDelta.x !== 0 ? positionDelta.x * bulletStartSpeed : 0,
-						y: positionDelta.y !== 0 ? positionDelta.y * bulletStartSpeed : 0,
+						x: positionDelta.x,
+						y: positionDelta.y,
 					}
 				)
 			);
@@ -122,7 +121,7 @@ export default class MyGame {
 		this.keyObserver = KeyObserver.getInstance();
 		this.renderer = Renderer.getInstance();
 		this.canvasContext = null;
-		this.debugEntity = new DebugEntity({ position: {x:-100 , y:-100} });
+		this.debugEntity = new DebugEntity({ position: { x: -100, y: -100 } });
 	}
 }
 

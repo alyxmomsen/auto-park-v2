@@ -15,8 +15,7 @@ export class Movement {
 			x: pX + vX,
 			y: pY + vY,
 		};
-    }
-    
+	}
 
 	constructor({ position, velocity }: { position: Position; velocity: MovementVelocity }) {
 		this.positionOfOrigin = position;

@@ -25,7 +25,7 @@ export class Bullet extends Character {
 			movVelo,
 			'bullet'
 		);
-		this.debugEntity = new DebugEntity({ position: {x:0 , y:0} });
+		this.debugEntity = new DebugEntity({ position: { x: 0, y: 0 } });
 	}
 }
 
@@ -33,5 +33,4 @@ export class BulletPosition extends Position {
 	constructor(x: number, y: number) {
 		super({ x, y });
 	}
-	
 }

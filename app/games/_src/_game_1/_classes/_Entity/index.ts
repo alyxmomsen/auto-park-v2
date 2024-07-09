@@ -11,11 +11,10 @@ import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
 export abstract class Entity implements IDebugEntity {
-
 	private static numberOfInstncies: number = 0;
 	protected title: string;
 
-	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void 
+	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void;
 	public abstract setDebugEntityPosition(x: number, y: number): void;
 
 	public setNoI() {
@@ -82,7 +81,7 @@ export abstract class Entity implements IDebugEntity {
 
 	abstract fireBehavior(): void;
 
-	public update(entities: Entity[] ) {
+	public update(entities: Entity[]) {
 		const collider = new Collider(this);
 
 		entities.forEach((entity) => {
@@ -111,7 +110,7 @@ export abstract class Entity implements IDebugEntity {
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
 		renderer.renderSquare(ctx, this);
 
-		this.renderDebug(ctx , renderer);
+		this.renderDebug(ctx, renderer);
 	}
 
 	constructor(
@@ -128,14 +127,12 @@ export abstract class Entity implements IDebugEntity {
 		this.state = new EntityState();
 		// this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
 		this.combat = combat;
-		this.combatVariants = [new NoCombat() ,new MinigunCombat(), new GunCombat()];
+		this.combatVariants = [new NoCombat(), new MinigunCombat(), new GunCombat()];
 		this.setCombat();
 		this.title = title;
 		this.movement = new Movement({
 			position,
 			velocity: new MovementVelocity(movVel.x, movVel.y),
 		});
-
-		
 	}
 }

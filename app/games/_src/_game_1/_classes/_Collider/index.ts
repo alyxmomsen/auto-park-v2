@@ -48,23 +48,29 @@ export class Collider {
 				main_items.top + y < subj_items.bottom + subj_items.velocityY &&
 				main_items.bottom + y > subj_items.top + subj_items.velocityY
 			) {
-				// alert()
-				/* if(this.main.getTitle() === 'player')  */subj_items.subject.setDebugEntityPosition(main_items.left + x , main_items.top + y);
+				subj_items.subject.setDebugEntityPosition(main_items.left + x, main_items.top + y);
 				return true;
 			}
-
+			// subj_items.subject.setDebugEntityPosition(main_items.left + x , main_items.top + y);
 			// if(this.main.getTitle() === 'player') subj_items.subject.setDebugEntityPosition(main_items.left + x , main_items.top + y);
 			return false;
 		};
 
 		const foo = () => {
 			const testByX = () => {
-
-				// const x = subj_items.left + subj_items.velocityX - main_items.width;
-				const newVectorX = subj_items.left + subj_items.velocityX - (main_items.right - main_items.velocityX);
+				let newVectorX = 0;
 				const getNewVectorY = (newVectorX: number) =>
 					(main_items.velocityY / main_items.velocityX) * newVectorX;
-				// const y = main_items.left + getNewVectorY(newVectorX);
+				if (main_items.velocityX > 0) {
+					newVectorX =
+						(subj_items.left + subj_items.velocityX) > (main_items.right) && (subj_items.left + subj_items.velocityX) <  (main_items.right + main_items.velocityX)
+							? subj_items.left + subj_items.velocityX - (main_items.right - main_items.velocityX)
+							: main_items.velocityX;
+				} else if (main_items.velocityX < 0) {
+					newVectorX = (subj_items.right + subj_items.velocityX) < (main_items.left) && (subj_items.right + subj_items.velocityX) > (main_items.left + main_items.velocityX)
+							? (main_items.left - main_items.velocityX) - subj_items.right - subj_items.velocityX
+							: main_items.velocityX;
+				}
 
 				return {
 					x: newVectorX,
@@ -73,12 +79,21 @@ export class Collider {
 			};
 
 			const testByY = () => {
-				// const y = subj_items.top - main_items.height;
-				const newVectorY = subj_items.top + subj_items.velocityY - (main_items.bottom - main_items.velocityY);
-				// const getNewVectorY = (newVectorX: number) => (subj_items.velocityY / subj_items.velocityX) * newVectorX;
+
+				let newVectorY = 0;
 				const getNewVectorX = (newVectorY: number) =>
 					(main_items.velocityX / main_items.velocityY) * newVectorY;
-				// const x = main_items.top + getNewVectorX(newVectorY);
+
+				if (main_items.velocityY > 0) {
+					newVectorY =
+						(subj_items.top + subj_items.velocityY) > (main_items.bottom) && (subj_items.top + subj_items.velocityY) <  (main_items.bottom + main_items.velocityY)
+							? subj_items.top + subj_items.velocityY - (main_items.bottom - main_items.velocityY)
+							: main_items.velocityY;
+				} else if (main_items.velocityY < 0) {
+					newVectorY = (subj_items.bottom + subj_items.velocityY) < (main_items.top) && (subj_items.bottom + subj_items.velocityY) > (main_items.top + main_items.velocityY)
+							? (main_items.top - main_items.velocityY) - subj_items.bottom - subj_items.velocityY
+							: main_items.velocityY;
+				}
 
 				return {
 					x: getNewVectorX(newVectorY),
@@ -97,12 +112,7 @@ export class Collider {
 
 		const debugStr = foo();
 		if (this.main.getTitle() === 'player') {
-			// console.clear();
-			console
-				.log
-				(
-					debugStr
-				);
+			console.log(debugStr);
 		}
 	}
 
@@ -130,7 +140,7 @@ export class Collider {
 		};
 	}
 
-	constructor(mainEntity: Entity , debugEntity?:DebugEntity) {
+	constructor(mainEntity: Entity, debugEntity?: DebugEntity) {
 		this.main = mainEntity;
 		this.collisions = [];
 	}
@@ -152,7 +162,7 @@ export class Collision {
 	constructor(
 		subjectA: { subj: Entity; state: ICollisionItemState },
 		subjectB: { subj: Entity; state: ICollisionItemState },
-		debugEntity?: DebugEntity ,
+		debugEntity?: DebugEntity
 	) {
 		this.subjectA = subjectA;
 		this.subjectB = subjectB;

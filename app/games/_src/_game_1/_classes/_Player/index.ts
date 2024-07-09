@@ -11,14 +11,10 @@ export class PlayerPostion extends Position {
 }
 
 export class Player extends Character {
-	fireBehavior() { }
-	public renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {
-		
-	}
-	public setDebugEntityPosition(x: number, y: number): void {
-		
-	}
-	
+	fireBehavior() {}
+	public renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {}
+	public setDebugEntityPosition(x: number, y: number): void {}
+
 	constructor({ position }: { position: { x: number; y: number } }) {
 		super(
 			new PlayerPostion(position.x, position.y),

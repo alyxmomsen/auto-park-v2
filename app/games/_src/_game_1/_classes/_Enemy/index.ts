@@ -15,10 +15,10 @@ export class EnemyPosition extends Position {
 export class Enemy extends Character {
 	private debugEntity: DebugEntity;
 	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {
-		this.debugEntity.render(ctx , renderer);
+		this.debugEntity.render(ctx, renderer);
 	}
 	public setDebugEntityPosition(x: number, y: number): void {
-		this.debugEntity.movement.positionOfOrigin.setPosition({x , y});
+		this.debugEntity.movement.positionOfOrigin.setPosition({ x, y });
 	}
 	fireBehavior() {}
 	constructor({ position: { x, y } }: { position: { x: number; y: number } }) {
@@ -33,6 +33,6 @@ export class Enemy extends Character {
 			},
 			'enemy'
 		);
-		this.debugEntity = new DebugEntity({ position: {x:0 , y:0} });
+		this.debugEntity = new DebugEntity({ position: { x: 0, y: 0 } });
 	}
 }
