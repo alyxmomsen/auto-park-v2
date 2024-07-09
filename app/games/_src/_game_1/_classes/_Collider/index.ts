@@ -63,8 +63,8 @@ export class Collider {
 					(main_items.velocityY / main_items.velocityX) * newVectorX;
 				if (main_items.velocityX > 0) {
 					newVectorX =
-						(subj_items.left + subj_items.velocityX) > (main_items.right) && (subj_items.left + subj_items.velocityX) <  (main_items.right + main_items.velocityX)
-							? subj_items.left + subj_items.velocityX - (main_items.right - main_items.velocityX)
+						(subj_items.left/*  + subj_items.velocityX */) > (main_items.right) && (subj_items.left + subj_items.velocityX) <  (main_items.right + main_items.velocityX)
+							? subj_items.left/*  + subj_items.velocityX */ - (main_items.right/*  - main_items.velocityX */)
 							: main_items.velocityX;
 				} else if (main_items.velocityX < 0) {
 					newVectorX = (subj_items.right + subj_items.velocityX) < (main_items.left) && (subj_items.right + subj_items.velocityX) > (main_items.left + main_items.velocityX)

@@ -36,7 +36,7 @@ export default class MyGame {
 		const { x, y } = this.player.movement.positionOfOrigin.getPosition();
 		const { width, height } = this.player.dimensions.get();
 
-		const bulletStartSpeed = 100;
+		const bulletStartSpeed = 55;
 
 		if (this.player.combat.isReady()) {
 			this.bullets.push(
@@ -56,8 +56,8 @@ export default class MyGame {
 								: y + height / 2,
 					},
 					{
-						x: positionDelta.x,
-						y: positionDelta.y,
+						x: positionDelta.x * bulletStartSpeed,
+						y: positionDelta.y * bulletStartSpeed,
 					}
 				)
 			);
