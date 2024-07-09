@@ -37,11 +37,11 @@ export abstract class Entity implements IDebugEntity {
 	public state: EntityState;
 
 	public combat: Combat;
-	private combatVariants: Combat[] = [new MinigunCombat(), new GunCombat(), new NoCombat()];
+	private combatVariants: Combat[];
 
 	private setCombat() {
 		if (this.combatVariants.length) {
-			this.combat = this.combatVariants[0];
+			this.combat = this.combatVariants[this.combatVariants.length - 1];
 		}
 	}
 
@@ -128,6 +128,7 @@ export abstract class Entity implements IDebugEntity {
 		this.state = new EntityState();
 		// this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
 		this.combat = combat;
+		this.combatVariants = [new NoCombat() ,new MinigunCombat(), new GunCombat()];
 		this.setCombat();
 		this.title = title;
 		this.movement = new Movement({

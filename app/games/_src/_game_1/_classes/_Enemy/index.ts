@@ -13,7 +13,7 @@ export class EnemyPosition extends Position {
 }
 
 export class Enemy extends Character {
-	debugEntity: DebugEntity;
+	private debugEntity: DebugEntity;
 	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {
 		this.debugEntity.render(ctx , renderer);
 	}

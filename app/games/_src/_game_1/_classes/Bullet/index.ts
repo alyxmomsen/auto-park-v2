@@ -6,12 +6,12 @@ import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
 export class Bullet extends Character {
-	debugEntity: DebugEntity;
+	private debugEntity: DebugEntity;
 	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {
-		this.debugEntity.render(ctx , renderer);
+		// this.debugEntity.render(ctx , renderer);
 	}
 	public setDebugEntityPosition(x: number, y: number): void {
-		this.debugEntity.movement.positionOfOrigin.setPosition({x , y});
+		// this.debugEntity.movement.positionOfOrigin.setPosition({x , y});
 	}
 
 	fireBehavior(): void {}

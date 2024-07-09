@@ -1,6 +1,6 @@
 import { Character } from '../_Character';
 import { Color } from '../_Color';
-import { Combat, GunCombat, MinigunCombat } from '../_Combat';
+import { GunCombat } from '../_Combat';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
@@ -18,6 +18,7 @@ export class Player extends Character {
 	public setDebugEntityPosition(x: number, y: number): void {
 		
 	}
+	
 	constructor({ position }: { position: { x: number; y: number } }) {
 		super(
 			new PlayerPostion(position.x, position.y),

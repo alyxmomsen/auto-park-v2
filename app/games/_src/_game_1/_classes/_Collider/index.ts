@@ -48,6 +48,7 @@ export class Collider {
 				main_items.top + y < subj_items.bottom + subj_items.velocityY &&
 				main_items.bottom + y > subj_items.top + subj_items.velocityY
 			) {
+				// alert()
 				/* if(this.main.getTitle() === 'player')  */subj_items.subject.setDebugEntityPosition(main_items.left + x , main_items.top + y);
 				return true;
 			}
@@ -58,6 +59,7 @@ export class Collider {
 
 		const foo = () => {
 			const testByX = () => {
+
 				// const x = subj_items.left + subj_items.velocityX - main_items.width;
 				const newVectorX = subj_items.left + subj_items.velocityX - (main_items.right - main_items.velocityX);
 				const getNewVectorY = (newVectorX: number) =>
@@ -93,10 +95,9 @@ export class Collider {
 			return `x: ${case_1 ? 'true' : 'false'} \n,y:${case_2 ? 'true' : 'false'} \nmain: \nvx${main_items.velocityX} , \nvy${main_items.velocityY} \ntestx:${true && JSON.stringify(tBX)} \ntesty:${true && JSON.stringify(tBY)}`;
 		};
 
+		const debugStr = foo();
 		if (this.main.getTitle() === 'player') {
 			// console.clear();
-
-			const debugStr = foo();
 			console
 				.log
 				(

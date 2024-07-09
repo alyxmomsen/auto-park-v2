@@ -38,9 +38,8 @@ export default class MyGame {
 
 		const bulletStartSpeed = 50;
 
-		if (entity.combat.isReady()) {
-			console.log(positionDelta, positionDelta.x * x);
-
+		if (this.player.combat.isReady()) {
+			
 			this.bullets.push(
 				new Bullet(
 					{
@@ -84,7 +83,7 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeBullet(this.player, { x: -1, y: 0 }) : null;
 		this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeBullet(this.player, { x: 1, y: 0 }) : null;
 
-		if (this.bullets.length > 100) this.bullets.shift();
+		if (this.bullets.length > 10) this.bullets.shift();
 		/* --- */
 
 		this.player.update([...this.enemies, ...this.bullets]);
