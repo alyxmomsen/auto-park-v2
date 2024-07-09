@@ -4,18 +4,29 @@ import { Color } from '../_Color';
 import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
 import { Dimensions } from '../_Dimensions';
 import { EntityState } from '../_EntityState';
+import { Movement } from '../_Movement';
 import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
 export abstract class Entity {
+	private static numberOfInstncies: number = 0;
 	protected title: string;
+
+	public setNoI() {
+		Entity.numberOfInstncies += 1;
+	}
+
+	public getNoI() {
+		return Entity.numberOfInstncies;
+	}
 
 	public getTitle() {
 		return this.title;
 	}
-	public position: Position;
-	public movementVelocity: MovementVelocity;
+
+	public movement: Movement;
+
 	public dimensions: Dimensions;
 	public color: Color;
 	public state: EntityState;
@@ -43,23 +54,23 @@ export abstract class Entity {
 	public addCombat() {}
 
 	private updatePositionByVelocity() {
-		const { x, y } = this.position.getPosition();
-		const { x: vX, y: vY } = this.movementVelocity.getState();
-		this.position.setPosition({ x: x + vX, y: y + vY });
+		const { x, y } = this.movement.position.getPosition();
+		const { x: vX, y: vY } = this.movement.velocity.getState();
+		this.movement.position.setPosition({ x: x + vX, y: y + vY });
 	}
 
 	//move up === increment velocity
 	public moveUp() {
-		this.movementVelocity.decrement('y');
+		this.movement.velocity.decrement('y');
 	}
 	public moveDown() {
-		this.movementVelocity.increment('y');
+		this.movement.velocity.increment('y');
 	}
 	public moveLeft() {
-		this.movementVelocity.decrement('x');
+		this.movement.velocity.decrement('x');
 	}
 	public moveRight() {
-		this.movementVelocity.increment('x');
+		this.movement.velocity.increment('x');
 	}
 	//fire === ???
 	public fire() {}
@@ -81,13 +92,13 @@ export abstract class Entity {
 		if (collisions.length) {
 			collisions /* [0].resolve(); */
 				.forEach((collision) => {
-					collision.resolve();
+					collision.resolution();
 				});
 		} else {
 			this.updatePositionByVelocity();
 		}
 
-		this.movementVelocity.collapseBy(0.95);
+		this.movement.velocity.collapseBy(0.95);
 	}
 
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
@@ -102,13 +113,17 @@ export abstract class Entity {
 		movVel: { x: number; y: number },
 		title: string
 	) {
-		this.position = position;
+		// this.position = position;
 		this.dimensions = new Dimensions(dimensions);
 		this.color = color;
 		this.state = new EntityState();
-		this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
+		// this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
 		this.combat = combat;
 		this.setCombat();
 		this.title = title;
+		this.movement = new Movement({
+			position,
+			velocity:new MovementVelocity(movVel.x, movVel.y)
+		});
 	}
 }

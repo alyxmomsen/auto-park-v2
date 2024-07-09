@@ -4,7 +4,7 @@ export class Renderer {
 	renderSquare(ctx: CanvasRenderingContext2D, entity: Entity) {
 		ctx.fillStyle = entity.color.get();
 
-		const { x, y } = entity.position.getPosition();
+		const { x, y } = entity.movement.position.getPosition();
 		const { width, height } = entity.dimensions.get();
 		ctx.fillRect(x, y, width, height);
 	}

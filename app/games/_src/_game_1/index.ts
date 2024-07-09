@@ -31,7 +31,7 @@ export default class MyGame {
 	}
 
 	makeBullet(entity: Entity, positionDelta: { x: 1 | 0 | -1; y: 1 | 0 | -1 }) {
-		const { x, y } = this.player.position.getPosition();
+		const { x, y } = this.player.movement.position.getPosition();
 		const { width, height } = this.player.dimensions.get();
 
 		const bulletStartSpeed = 50;
@@ -69,7 +69,7 @@ export default class MyGame {
 			this.canvasContext = canvasContext;
 		}
 
-		this.setCanvasSize(800);
+		this.setCanvasSize(500);
 	}
 
 	public update() {
@@ -111,10 +111,10 @@ export default class MyGame {
 	}
 
 	private constructor() {
-		this.player = new Player();
+		this.player = new Player({ position: {x:300 , y:300} });
 		this.enemies = [
 			new Enemy({ position: { x: 100, y: 100 } }),
-			new Enemy({ position: { x: 400, y: 400 } }),
+			new Enemy({ position: { x: 600, y: 300 } }),
 			// new Enemy({ position: {x:800 , y:800} }) ,
 		];
 		this.keyObserver = KeyObserver.getInstance();

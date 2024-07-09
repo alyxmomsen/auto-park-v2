@@ -11,9 +11,9 @@ export class PlayerPostion extends Position {
 
 export class Player extends Character {
 	fireBehavior() {}
-	constructor() {
+	constructor({position}: { position: {x:number , y:number} }) {
 		super(
-			new PlayerPostion(0, 0),
+			new PlayerPostion(position.x , position.y),
 			{ width: 50, height: 50 },
 			new Color('#2a2869'),
 			new GunCombat(),
@@ -23,5 +23,8 @@ export class Player extends Character {
 			},
 			'player'
 		);
+
+		this.setNoI();// инкремент счетчика инстанций, для отладки
+		console.log(this.getNoI());
 	}
 }

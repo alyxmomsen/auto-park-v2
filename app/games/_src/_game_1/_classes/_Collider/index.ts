@@ -41,8 +41,8 @@ export class Collider {
 	}
 
 	private getMovementItems(entity: Entity): ICollisionItemState {
-		const position = entity.position.getPosition();
-		const velocity = entity.movementVelocity.getState();
+		const position = entity.movement.position.getPosition();
+		const velocity = entity.movement.velocity.getState();
 		const dimensions = entity.dimensions.get();
 
 		return {
@@ -75,7 +75,7 @@ export class Collision {
 		state: ICollisionItemState;
 	};
 
-	resolve() {
+	resolution() {
 		const newPositionXByCenterA =
 			this.subjectA.state.right -
 			(this.subjectA.state.right - this.subjectA.state.left) / 2 +
@@ -135,24 +135,4 @@ export class Collision {
 	}
 }
 
-// function util_1() {
-// 	const getRelDistanceXByAxisDir = (dir: number) => this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.right + this.subjectB.state.velocityX;
-// 	const getRelDistanceYByAxisDir = (dir: number) => this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.right + this.subjectB.state.velocityX;
 
-// 	const distanceXAbs = this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.left + this.subjectA.state.velocityX;
-// 	const distanceYAbs = this.subjectA.state.top + this.subjectA.state.velocityY - this.subjectB.state.top + this.subjectB.state.velocityY;
-// 	const collisionVectorAbs = Math.sqrt((distanceXAbs ** 2) + (distanceYAbs ** 2));
-// 	const distanceXRel = distanceXAbs > 0
-// 		? this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.right + this.subjectB.state.velocityX
-// 		: distanceXAbs < 0
-// 			? this.subjectA.state.right + this.subjectA.state.velocityX - this.subjectB.state.left + this.subjectB.state.velocityX
-// 			: 0;
-// 	const distanceYRel = distanceYAbs > 0
-// 		? this.subjectA.state.top + this.subjectA.state.velocityY - this.subjectB.state.bottom + this.subjectB.state.velocityY
-// 		: distanceXAbs < 0
-// 			? this.subjectA.state.bottom + this.subjectA.state.velocityY - this.subjectB.state.top + this.subjectB.state.velocityY
-// 			: 0;
-// 	const collisionVectorRel = Math.sqrt((distanceXRel ** 2) + (distanceYRel ** 2));
-
-// 	const dive = ''
-// }
