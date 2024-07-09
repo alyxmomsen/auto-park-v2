@@ -12,7 +12,7 @@ export class MovementVelocity {
 		};
 	}
 
-	set(x:number , y:number) {
+	set(x: number, y: number) {
 		this.x = x;
 		this.y = y;
 	}

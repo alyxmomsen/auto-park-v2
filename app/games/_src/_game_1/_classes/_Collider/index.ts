@@ -30,7 +30,9 @@ export class Collider {
 			main_items.top + main_items.velocityY < subj_items.bottom + subj_items.velocityY &&
 			main_items.bottom + main_items.velocityY > subj_items.top + subj_items.velocityY
 		) {
-			this.collisions.push(new Collision({ subj: this.main, state: main_items }, {subj:entity , state:subj_items}));
+			this.collisions.push(
+				new Collision({ subj: this.main, state: main_items }, { subj: entity, state: subj_items })
+			);
 		}
 	}
 
@@ -67,23 +69,90 @@ export class Collision {
 		subj: Entity;
 		state: ICollisionItemState;
 	};
+
 	private subjectB: {
 		subj: Entity;
 		state: ICollisionItemState;
 	};
 
 	resolve() {
-		const diffX = this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.left + this.subjectA.state.velocityX;
-		const diffY = this.subjectA.state.top + this.subjectA.state.velocityX - this.subjectB.state.top + this.subjectA.state.velocityX;
-		const collisionVector = Math.sqrt((diffX ** 2) + (diffY ** 2));
+		const newPositionXByCenterA =
+			this.subjectA.state.right -
+			(this.subjectA.state.right - this.subjectA.state.left) / 2 +
+			this.subjectA.state.velocityX;
+		const newPositionYByCenterA =
+			this.subjectA.state.bottom -
+			(this.subjectA.state.bottom - this.subjectA.state.top) / 2 +
+			this.subjectA.state.velocityY;
+		const newPositionXByCenterB =
+			this.subjectB.state.right -
+			(this.subjectB.state.right - this.subjectB.state.left) / 2 +
+			this.subjectB.state.velocityX;
+		const newPositionYByCenterB =
+			this.subjectB.state.bottom -
+			(this.subjectB.state.bottom - this.subjectB.state.top) / 2 +
+			this.subjectB.state.velocityY;
 
-		
-		console.log();
+		const subjARelativeVector = Math.sqrt(this.subjectA.state.velocityX ** 2 + this.subjectA.state.velocityY ** 2);
+
+		const distanceXAbs = newPositionXByCenterA - newPositionXByCenterB;
+		const distanceYAbs = newPositionYByCenterA - newPositionYByCenterB;
+		const collisionVectorAbs = Math.sqrt(distanceXAbs ** 2 + distanceYAbs ** 2);
+		const angle = Math.atan2(distanceYAbs, distanceXAbs) * (180 / Math.PI); // Угол в градусах
+		if (this.subjectA.subj.getTitle() === 'player')
+			console.log({
+				/* collisionVectorAbs, distanceXAbs, distanceYAbs,  */ angle,
+				vec: subjARelativeVector,
+				x: this.subjectA.state.velocityX,
+				y: this.subjectA.state.velocityY,
+			});
+
+		if ((angle < 45 && angle >= 0) || (angle < -0 && angle >= -45)) {
+			if (this.subjectA.subj.getTitle() === 'player') {
+				console.log('right');
+			}
+		} else if (angle < -45 && angle >= -135) {
+			if (this.subjectA.subj.getTitle() === 'player') {
+				console.log('top');
+			}
+		} else if ((angle < -135 && angle >= -180) || (angle < 180 && angle >= 135)) {
+			if (this.subjectA.subj.getTitle() === 'player') {
+				console.log('left');
+			}
+		} else if (angle < 135 && angle >= 45) {
+			if (this.subjectA.subj.getTitle() === 'player') {
+				console.log('bottom');
+			}
+		}
 	}
 
-	constructor(subjectA: { subj:Entity , state:ICollisionItemState} , subjectB: { subj:Entity , state:ICollisionItemState}) {
-		this.subjectA = subjectA ;
-		this.subjectB = subjectB ;
+	constructor(
+		subjectA: { subj: Entity; state: ICollisionItemState },
+		subjectB: { subj: Entity; state: ICollisionItemState }
+	) {
+		this.subjectA = subjectA;
+		this.subjectB = subjectB;
 	}
 }
 
+// function util_1() {
+// 	const getRelDistanceXByAxisDir = (dir: number) => this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.right + this.subjectB.state.velocityX;
+// 	const getRelDistanceYByAxisDir = (dir: number) => this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.right + this.subjectB.state.velocityX;
+
+// 	const distanceXAbs = this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.left + this.subjectA.state.velocityX;
+// 	const distanceYAbs = this.subjectA.state.top + this.subjectA.state.velocityY - this.subjectB.state.top + this.subjectB.state.velocityY;
+// 	const collisionVectorAbs = Math.sqrt((distanceXAbs ** 2) + (distanceYAbs ** 2));
+// 	const distanceXRel = distanceXAbs > 0
+// 		? this.subjectA.state.left + this.subjectA.state.velocityX - this.subjectB.state.right + this.subjectB.state.velocityX
+// 		: distanceXAbs < 0
+// 			? this.subjectA.state.right + this.subjectA.state.velocityX - this.subjectB.state.left + this.subjectB.state.velocityX
+// 			: 0;
+// 	const distanceYRel = distanceYAbs > 0
+// 		? this.subjectA.state.top + this.subjectA.state.velocityY - this.subjectB.state.bottom + this.subjectB.state.velocityY
+// 		: distanceXAbs < 0
+// 			? this.subjectA.state.bottom + this.subjectA.state.velocityY - this.subjectB.state.top + this.subjectB.state.velocityY
+// 			: 0;
+// 	const collisionVectorRel = Math.sqrt((distanceXRel ** 2) + (distanceYRel ** 2));
+
+// 	const dive = ''
+// }

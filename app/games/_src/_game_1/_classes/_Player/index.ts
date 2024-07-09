@@ -12,9 +12,16 @@ export class PlayerPostion extends Position {
 export class Player extends Character {
 	fireBehavior() {}
 	constructor() {
-		super(new PlayerPostion(0, 0), { width: 50, height: 100 }, new Color('#2a2869'), new GunCombat(), {
-			x: 0,
-			y: 0,
-		} , "player");
+		super(
+			new PlayerPostion(0, 0),
+			{ width: 50, height: 50 },
+			new Color('#2a2869'),
+			new GunCombat(),
+			{
+				x: 0,
+				y: 0,
+			},
+			'player'
+		);
 	}
 }

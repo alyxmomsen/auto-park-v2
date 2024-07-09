@@ -12,8 +12,8 @@ export class Bullet extends Character {
 			{ width: 25, height: 25 },
 			new Color(/* '#9c3278' */),
 			new NoCombat(),
-			movVelo, 
-			"bullet",
+			movVelo,
+			'bullet'
 		);
 	}
 }

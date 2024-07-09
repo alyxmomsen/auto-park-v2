@@ -1,9 +1,7 @@
-export class Degugger {
+export interface IDebugerShowBehevior {
+	show(): void;
+}
 
-    
-
-
-    constructor() {
-
-    }
+export abstract class Debugger implements IDebugerShowBehevior {
+	abstract show(): void;
 }

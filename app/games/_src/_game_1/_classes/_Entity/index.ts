@@ -79,9 +79,10 @@ export abstract class Entity {
 		const collisions = collider.getCollisions();
 
 		if (collisions.length) {
-			collisions/* [0].resolve(); */.forEach(collision => {
-			collision.resolve();
-		});
+			collisions /* [0].resolve(); */
+				.forEach((collision) => {
+					collision.resolve();
+				});
 		} else {
 			this.updatePositionByVelocity();
 		}
@@ -99,7 +100,7 @@ export abstract class Entity {
 		color: Color,
 		combat: Combat,
 		movVel: { x: number; y: number },
-		title: string 
+		title: string
 	) {
 		this.position = position;
 		this.dimensions = new Dimensions(dimensions);
