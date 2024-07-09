@@ -135,54 +135,8 @@ export class Collision {
 	};
 
 	resolution() {
-		const newPositionXByCenterA =
-			this.subjectA.state.right -
-			(this.subjectA.state.right - this.subjectA.state.left) / 2 +
-			this.subjectA.state.velocityX;
-		const newPositionYByCenterA =
-			this.subjectA.state.bottom -
-			(this.subjectA.state.bottom - this.subjectA.state.top) / 2 +
-			this.subjectA.state.velocityY;
-		const newPositionXByCenterB =
-			this.subjectB.state.right -
-			(this.subjectB.state.right - this.subjectB.state.left) / 2 +
-			this.subjectB.state.velocityX;
-		const newPositionYByCenterB =
-			this.subjectB.state.bottom -
-			(this.subjectB.state.bottom - this.subjectB.state.top) / 2 +
-			this.subjectB.state.velocityY;
+		
 
-		const subjARelativeVector = Math.sqrt(this.subjectA.state.velocityX ** 2 + this.subjectA.state.velocityY ** 2);
-
-		const distanceXAbs = newPositionXByCenterA - newPositionXByCenterB;
-		const distanceYAbs = newPositionYByCenterA - newPositionYByCenterB;
-		const collisionVectorAbs = Math.sqrt(distanceXAbs ** 2 + distanceYAbs ** 2);
-		const angle = Math.atan2(distanceYAbs, distanceXAbs) * (180 / Math.PI); // Угол в градусах
-		if (this.subjectA.subj.getTitle() === 'player')
-			console.log({
-				/* collisionVectorAbs, distanceXAbs, distanceYAbs,  */ angle,
-				vec: subjARelativeVector,
-				x: this.subjectA.state.velocityX,
-				y: this.subjectA.state.velocityY,
-			});
-
-		if ((angle < 45 && angle >= 0) || (angle < -0 && angle >= -45)) {
-			if (this.subjectA.subj.getTitle() === 'player') {
-				console.log('right');
-			}
-		} else if (angle < -45 && angle >= -135) {
-			if (this.subjectA.subj.getTitle() === 'player') {
-				console.log('top');
-			}
-		} else if ((angle < -135 && angle >= -180) || (angle < 180 && angle >= 135)) {
-			if (this.subjectA.subj.getTitle() === 'player') {
-				console.log('left');
-			}
-		} else if (angle < 135 && angle >= 45) {
-			if (this.subjectA.subj.getTitle() === 'player') {
-				console.log('bottom');
-			}
-		}
 	}
 
 	constructor(
