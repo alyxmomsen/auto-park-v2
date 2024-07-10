@@ -10,7 +10,7 @@ interface IMovementState {
 }
 
 export class Movement {
-	// private nextPosition
+	
 	positionOfOrigin: Position;
 	velocity: MovementVelocity;
 

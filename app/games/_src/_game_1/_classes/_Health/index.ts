@@ -3,9 +3,7 @@ import { Entity } from "../_Entity";
 export interface IHealthBehavior {
     
     calculateDamageBy(entity: Entity): number;
-    
 }
-
 
 export abstract class HealthBehavior implements IHealthBehavior {
     protected interval?: number;
@@ -28,7 +26,6 @@ export abstract class HealthBehavior implements IHealthBehavior {
         this.lastExecute = 0;
     }
 }
-
 
 export class PlayerHealthBehavior extends HealthBehavior {
 
@@ -70,8 +67,6 @@ export class NoHealthBehavior extends HealthBehavior {
     }
 }
 
-
-
 export class Health {
 
     private healthBehavior: HealthBehavior;
@@ -97,7 +92,6 @@ export class Health {
         this.dec(damage);
         
     }
-
 
     constructor(value:number , healthBehavior:HealthBehavior) {
         this.value = value;

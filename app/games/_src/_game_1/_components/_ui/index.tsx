@@ -51,10 +51,6 @@ const Game_1 = () => {
 
 	useEffect(() => {
 		console.log('effect');
-		// (() => {
-		// 	const gameInstance = MyGame.instanceGame();
-		// 	gameInstance?.setEnemy();
-		// })();
 
 		setGame(MyGame.instanceGame());
 

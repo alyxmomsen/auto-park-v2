@@ -13,7 +13,6 @@ export abstract class Position {
 	}
 
 	constructor(position: IPosition) {
-		// this.position = { x: position.x, y: position.y };
 		this.x = position.x;
 		this.y = position.y;
 	}

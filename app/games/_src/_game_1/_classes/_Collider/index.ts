@@ -1,11 +1,11 @@
 
-import { Entity, IEntityState } from '../_Entity';
+import { Entity, IEntityProperties } from '../_Entity';
 import { DebugEntity, IDebugEntity } from '../_DebugEntity';
 
 
 interface IMovementStateVariant {
-	currentState(): IEntityState;
-	nextState(): IEntityState;
+	currentState(): IEntityProperties;
+	nextState(): IEntityProperties;
 }
 
 type TCheckCollision = {
@@ -19,7 +19,6 @@ type TCheckCollision = {
 
 export class Collider {
 	private main: Entity;
-	private collisions: Collision[];
 
 	private resolution(entity: Entity & IDebugEntity) {
 		const {x , y } = entity.movement.positionOfOrigin.getPosition();
@@ -53,13 +52,6 @@ export class Collider {
 			return false;
 		}
 	}
-
-	getCollisions() {
-		return [...this.collisions];
-	}
-
-
-	
 
 	private getMovementState(entity: Entity): IMovementStateVariant {
 		
@@ -105,26 +97,25 @@ export class Collider {
 
 	constructor(mainEntity: Entity, debugEntity?: DebugEntity) {
 		this.main = mainEntity;
-		this.collisions = [];
 	}
 }
 
 export class Collision {
 	private subjectA: {
 		subj: Entity;
-		state: IEntityState;
+		state: IEntityProperties;
 	};
 
 	private subjectB: {
 		subj: Entity;
-		state: IEntityState;
+		state: IEntityProperties;
 	};
 
 	resolution() {}
 
 	constructor(
-		subjectA: { subj: Entity; state: IEntityState },
-		subjectB: { subj: Entity; state: IEntityState },
+		subjectA: { subj: Entity; state: IEntityProperties },
+		subjectB: { subj: Entity; state: IEntityProperties },
 		debugEntity?: DebugEntity
 	) {
 		this.subjectA = subjectA;

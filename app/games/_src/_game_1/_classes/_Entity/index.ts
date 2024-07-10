@@ -12,8 +12,7 @@ import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
-
-export interface IEntityState {
+export interface IEntityProperties {
 	left: number;
 	right: number;
 	top: number;
@@ -64,17 +63,6 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 	public getTitle() {
 		return this.title;
 	}
-
-	getMovementState()/* : IEntityState */ {
-		
-		// const { height, width } = this.dimensions.get();
-		// const { } = this.movement.ge
-		// return {
-		// 	left:this.movement
-		// }
-	}
-
-	
 
 	private setCombat() {
 		if (this.combatVariants.length) {
@@ -134,23 +122,9 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 		const health = this.health.get();
 		if(this.title === "player") console.log(health);
 
-		// collider.getCollisions().forEach(collision => {
-		// 	collision.resolve(this);
-		// });
-		const collisions = collider.getCollisions();
-
-		if (collisions.length) {
-			collisions /* [0].resolve(); */
-				.forEach((collision) => {
-					collision.resolution();
-				});
-		} else {
-			this.updatePositionByVelocity();
-		}
-
+		this.updatePositionByVelocity();
 		this.movement.velocity.collapseBy(0.95);
 
-		// this.renderDebug();
 	}
 
 	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
@@ -169,11 +143,9 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 		health: Health,
 		damage:Damage ,
 	) {
-		// this.position = position;
 		this.dimensions = new Dimensions(dimensions);
 		this.color = color;
 		this.state = new EntityState();
-		// this.movementVelocity = new MovementVelocity(movVel.x, movVel.y);
 		this.combat = combat;
 		this.combatVariants = [new NoCombat(), new MinigunCombat(), new GunCombat()];
 		this.setCombat();
