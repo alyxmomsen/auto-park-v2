@@ -1,7 +1,9 @@
 import { Character } from '../_Character';
 import { Color } from '../_Color';
 import { NoCombat } from '../_Combat';
+import { Damage } from '../_Damage';
 import { Entity } from '../_Entity';
+import { NoHealthBehavior, Health } from '../_Health';
 import { PlayerPostion } from '../_Player';
 import { Renderer } from '../_Renderer';
 
@@ -13,7 +15,11 @@ export interface IDebugEntity {
 export class DebugEntity extends Character {
 	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {}
 
-	public setDebugEntityPosition(x: number, y: number): void {}
+	public setDebugEntityPosition(x: number, y: number): void { }
+	
+	public collisionResolution(): void {
+		
+	}
 
 	fireBehavior(): void {}
 	constructor({ position }: { position: { x: number; y: number } }) {
@@ -26,10 +32,12 @@ export class DebugEntity extends Character {
 				x: 0,
 				y: 0,
 			},
-			'debug_entity'
+			'debug_entity',
+			new Health(100, new NoHealthBehavior()),
+			new Damage(0),
 		);
 
 		this.setNoI(); // инкремент счетчика инстанций, для отладки
-		console.log(this.getNoI());
+		// console.log(this.getNoI());
 	}
 }

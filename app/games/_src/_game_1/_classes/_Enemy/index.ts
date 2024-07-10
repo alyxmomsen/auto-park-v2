@@ -1,8 +1,10 @@
 import { Character } from '../_Character';
 import { Color } from '../_Color';
 import { Combat, GunCombat } from '../_Combat';
+import { Damage } from '../_Damage';
 import { DebugEntity } from '../_DebugEntity';
 import { Entity } from '../_Entity';
+import { EnemyHealthBehavior, Health } from '../_Health';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
@@ -17,10 +19,18 @@ export class Enemy extends Character {
 	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {
 		this.debugEntity.render(ctx, renderer);
 	}
+
 	public setDebugEntityPosition(x: number, y: number): void {
 		this.debugEntity.movement.positionOfOrigin.setPosition({ x, y });
+		this.debugEntity.color.set(new Color().get());
 	}
-	fireBehavior() {}
+
+	fireBehavior() { }
+	
+	public collisionResolution(entity: Entity): void {
+		
+	}
+
 	constructor({ position: { x, y } }: { position: { x: number; y: number } }) {
 		super(
 			new EnemyPosition(x, y),
@@ -31,7 +41,9 @@ export class Enemy extends Character {
 				x: 0,
 				y: 0,
 			},
-			'enemy'
+			'enemy',
+			new Health(100, new EnemyHealthBehavior()),
+			new Damage(10) ,
 		);
 		this.debugEntity = new DebugEntity({ position: { x: 0, y: 0 } });
 	}

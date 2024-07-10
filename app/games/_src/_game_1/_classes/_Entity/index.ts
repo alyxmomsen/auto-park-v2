@@ -2,20 +2,56 @@ import { IDimensions } from '../../types';
 import { Collider } from '../_Collider';
 import { Color } from '../_Color';
 import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
-import { DebugEntity, IDebugEntity } from '../_DebugEntity';
+import { Damage } from '../_Damage';
+import { IDebugEntity } from '../_DebugEntity';
 import { Dimensions } from '../_Dimensions';
 import { EntityState } from '../_EntityState';
+import { Health } from '../_Health';
 import { Movement } from '../_Movement';
 import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
-export abstract class Entity implements IDebugEntity {
+
+export interface IEntityState {
+	left: number;
+	right: number;
+	top: number;
+	bottom: number;
+	width: number;
+	height: number;
+	velocityX: number;
+	velocityY: number;
+	subject: Entity;
+	vectorModule: number;
+	vectorAngle: number;
+}
+
+export interface ICollisionResolutionBehavior {
+	collisionResolution(entity:Entity):void
+}
+
+export abstract class Entity implements IDebugEntity , ICollisionResolutionBehavior {
 	private static numberOfInstncies: number = 0;
 	protected title: string;
+	public damage: Damage;
+	protected health: Health;
+	protected armor: string = '';
+	protected mass: number = 100;
+
+	public movement: Movement;
+
+	public dimensions: Dimensions;
+	public color: Color;
+	public state: EntityState;
+
+	public combat: Combat;
+	private combatVariants: Combat[];
 
 	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void;
 	public abstract setDebugEntityPosition(x: number, y: number): void;
+
+	public abstract collisionResolution(entity: Entity): void 
 
 	public setNoI() {
 		Entity.numberOfInstncies += 1;
@@ -29,14 +65,16 @@ export abstract class Entity implements IDebugEntity {
 		return this.title;
 	}
 
-	public movement: Movement;
+	getMovementState()/* : IEntityState */ {
+		
+		// const { height, width } = this.dimensions.get();
+		// const { } = this.movement.ge
+		// return {
+		// 	left:this.movement
+		// }
+	}
 
-	public dimensions: Dimensions;
-	public color: Color;
-	public state: EntityState;
-
-	public combat: Combat;
-	private combatVariants: Combat[];
+	
 
 	private setCombat() {
 		if (this.combatVariants.length) {
@@ -85,8 +123,16 @@ export abstract class Entity implements IDebugEntity {
 		const collider = new Collider(this);
 
 		entities.forEach((entity) => {
-			collider.test(entity);
+			const result = collider.test(entity);
+
+			if (result) {
+				this.collisionResolution(entity);
+				
+			}
 		});
+
+		const health = this.health.get();
+		if(this.title === "player") console.log(health);
 
 		// collider.getCollisions().forEach(collision => {
 		// 	collision.resolve(this);
@@ -119,7 +165,9 @@ export abstract class Entity implements IDebugEntity {
 		color: Color,
 		combat: Combat,
 		movVel: { x: number; y: number },
-		title: string
+		title: string ,
+		health: Health,
+		damage:Damage ,
 	) {
 		// this.position = position;
 		this.dimensions = new Dimensions(dimensions);
@@ -134,5 +182,7 @@ export abstract class Entity implements IDebugEntity {
 			position,
 			velocity: new MovementVelocity(movVel.x, movVel.y),
 		});
+		this.health = health;
+		this.damage = damage;
 	}
 }

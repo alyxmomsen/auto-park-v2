@@ -1,7 +1,9 @@
 import { Character } from '../_Character';
 import { Color } from '../_Color';
 import { Combat, NoCombat } from '../_Combat';
+import { Damage } from '../_Damage';
 import { DebugEntity } from '../_DebugEntity';
+import { BulletHealthBehavior as BulletHealthBehavior, Health } from '../_Health';
 import { Position } from '../_Position';
 import { Renderer } from '../_Renderer';
 
@@ -14,6 +16,10 @@ export class Bullet extends Character {
 		// this.debugEntity.movement.positionOfOrigin.setPosition({x , y});
 	}
 
+	public collisionResolution(): void {
+		
+	}
+
 	fireBehavior(): void {}
 
 	constructor(position: { x: number; y: number }, movVelo: { x: number; y: number }) {
@@ -23,7 +29,9 @@ export class Bullet extends Character {
 			new Color(/* '#9c3278' */),
 			new NoCombat(),
 			movVelo,
-			'bullet'
+			'bullet',
+			new Health(100, new BulletHealthBehavior()),
+			new Damage(20),
 		);
 		this.debugEntity = new DebugEntity({ position: { x: 0, y: 0 } });
 	}
