@@ -1,7 +1,7 @@
 export abstract class Combat {
 	protected last: number;
 	protected firerate: number;
-	isReady(): boolean {
+	checkIfReadyAndReset(): boolean {
 		const now = Date.now();
 		const isReady = now - this.last > this.firerate;
 		if (isReady) {
@@ -10,6 +10,11 @@ export abstract class Combat {
 		} else {
 			return false;
 		}
+	}
+
+	IsReady(): boolean {
+		const now = Date.now();
+		return now - this.last > this.firerate;	
 	}
 	constructor(firerate: number) {
 		this.firerate = firerate;
@@ -30,7 +35,7 @@ export class GunCombat extends Combat {
 }
 
 export class NoCombat extends Combat {
-	isReady(): boolean {
+	checkIfReadyAndReset(): boolean {
 		return false;
 	}
 

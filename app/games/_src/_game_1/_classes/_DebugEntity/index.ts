@@ -5,15 +5,15 @@ import { Damage } from '../_Damage';
 import { Entity } from '../_Entity';
 import { NoHealthBehavior, Health } from '../_Health';
 import { PlayerPostion } from '../_Player';
-import { Renderer } from '../_Renderer';
+import { RendererSingleton } from '../_Renderer';
 
 export interface IDebugEntity {
-	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void;
+	renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void;
 	setDebugEntityPosition(x: number, y: number): void;
 }
 
 export class DebugEntity extends Character {
-	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {}
+	renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void {}
 
 	public setDebugEntityPosition(x: number, y: number): void { }
 	

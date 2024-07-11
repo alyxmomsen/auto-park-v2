@@ -2,6 +2,7 @@ import { IDimensions } from '../../types';
 import { Collider } from '../_Collider';
 import { Color } from '../_Color';
 import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
+import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
 import { IDebugEntity } from '../_DebugEntity';
 import { Dimensions } from '../_Dimensions';
@@ -10,7 +11,8 @@ import { Health } from '../_Health';
 import { Movement } from '../_Movement';
 import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
-import { Renderer } from '../_Renderer';
+import { Query } from '../_Query';
+import { RendererSingleton } from '../_Renderer';
 
 export interface IEntityProperties {
 	left: number;
@@ -30,11 +32,16 @@ export interface ICollisionResolutionBehavior {
 	collisionResolution(entity:Entity):void
 }
 
-export abstract class Entity implements IDebugEntity , ICollisionResolutionBehavior {
+export interface ICollisionProcessing {
+	ifCollissionTest(entity: Entity): boolean;
+}
+
+export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavior, ICollisionProcessing {
+	public collider: Collider;
 	private static numberOfInstncies: number = 0;
 	protected title: string;
 	public damage: Damage;
-	protected health: Health;
+	public health: Health;
 	protected armor: string = '';
 	protected mass: number = 100;
 
@@ -47,10 +54,12 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 	public combat: Combat;
 	private combatVariants: Combat[];
 
-	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void;
+	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void;
 	public abstract setDebugEntityPosition(x: number, y: number): void;
 
-	public abstract collisionResolution(entity: Entity): void 
+	abstract collisionResolution(entity: Entity): void 
+
+	abstract ifCollissionTest(entity: Entity): boolean;
 
 	public setNoI() {
 		Entity.numberOfInstncies += 1;
@@ -107,15 +116,22 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 
 	abstract fireBehavior(): void;
 
-	public update(entities: Entity[]) {
-		const collider = new Collider(this);
+	protected abstract beforeUpdated(): void;
+	protected abstract afterUpdated(controller?:GameController): void;
+
+	public update(entities: (ICollisionResolutionBehavior & ICollisionProcessing & Entity)[], controller?: GameController) {
+		
+		/* --- */
+		
+		this.beforeUpdated();
+
+		/* --- */
 
 		entities.forEach((entity) => {
-			const result = collider.test(entity);
 
-			if (result) {
+			if (this.ifCollissionTest(entity)) {
 				this.collisionResolution(entity);
-				
+				// entity.collisionResolution(this);
 			}
 		});
 
@@ -125,12 +141,28 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 		this.updatePositionByVelocity();
 		this.movement.velocity.collapseBy(0.95);
 
+		/* --- */
+		
+		this.afterUpdated(controller);
+
+		/* --- */
+		
 	}
 
-	public render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
+	public render(ctx: CanvasRenderingContext2D, renderer: RendererSingleton) {
+		// render hit box
 		renderer.renderSquare(ctx, this);
 
+		// render the if reload state
+		renderer.renderText(ctx, this);
+		
+		// render health
+		renderer.renderHealthState(ctx , this);
+
+		/* --- */
+		// debug entity
 		this.renderDebug(ctx, renderer);
+		/* --- */
 	}
 
 	constructor(
@@ -147,7 +179,7 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 		this.color = color;
 		this.state = new EntityState();
 		this.combat = combat;
-		this.combatVariants = [new NoCombat(), new MinigunCombat(), new GunCombat()];
+		this.combatVariants = [new NoCombat(),new MinigunCombat() ,new GunCombat() ];
 		this.setCombat();
 		this.title = title;
 		this.movement = new Movement({
@@ -156,5 +188,6 @@ export abstract class Entity implements IDebugEntity , ICollisionResolutionBehav
 		});
 		this.health = health;
 		this.damage = damage;
+		this.collider = new Collider(this);
 	}
 }

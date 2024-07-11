@@ -2,15 +2,17 @@ import { AttackEntity } from '../_AttackEntity';
 import { Character } from '../_Character';
 import { Color } from '../_Color';
 import { Combat, NoCombat } from '../_Combat';
+import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
 import { DebugEntity } from '../_DebugEntity';
+import { Entity } from '../_Entity';
 import { BulletHealthBehavior as BulletHealthBehavior, Health } from '../_Health';
 import { Position } from '../_Position';
-import { Renderer } from '../_Renderer';
+import { RendererSingleton } from '../_Renderer';
 
 export class Bullet extends AttackEntity {
 	private debugEntity: DebugEntity;
-	renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {
+	renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void {
 		// this.debugEntity.render(ctx , renderer);
 	}
 	public setDebugEntityPosition(x: number, y: number): void {
@@ -21,7 +23,19 @@ export class Bullet extends AttackEntity {
 		
 	}
 
-	fireBehavior(): void {}
+	public ifCollissionTest(entity: Entity): boolean {
+		return false;
+	}
+
+	fireBehavior(): void { }
+	
+	protected afterUpdated(controller?:GameController): void {
+		
+	}
+
+	protected beforeUpdated(): void {
+		
+	}
 
 	constructor(position: { x: number; y: number }, movVelo: { x: number; y: number }) {
 		super(

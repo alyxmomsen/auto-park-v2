@@ -1,11 +1,12 @@
 import { Character } from '../_Character';
 import { Color } from '../_Color';
 import { GunCombat } from '../_Combat';
+import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
 import { Entity } from '../_Entity';
 import { Health, PlayerHealthBehavior } from '../_Health';
 import { Position } from '../_Position';
-import { Renderer } from '../_Renderer';
+import { RendererSingleton } from '../_Renderer';
 
 export class PlayerPostion extends Position {
 	constructor(x: number, y: number) {
@@ -15,13 +16,28 @@ export class PlayerPostion extends Position {
 
 export class Player extends Character {
 	fireBehavior() {}
-	public renderDebug(ctx: CanvasRenderingContext2D, renderer: Renderer): void {}
+	public renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void {}
 	public setDebugEntityPosition(x: number, y: number): void { }
 	
 	public collisionResolution(entity: Entity): void {
 
 		this.health.applyDamage(this , entity);
 	}
+
+	public ifCollissionTest(entity: Entity): boolean {
+
+		
+		return this.collider.test(entity);
+	}
+
+	protected beforeUpdated(): void {
+		
+	}
+	
+	protected afterUpdated(controller?:GameController): void {
+		
+	}
+
 
 	constructor({ position }: { position: { x: number; y: number } }) {
 		super(

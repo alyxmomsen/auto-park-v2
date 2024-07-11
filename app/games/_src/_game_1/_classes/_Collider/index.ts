@@ -20,23 +20,17 @@ type TCheckCollision = {
 export class Collider {
 	private main: Entity;
 
-	private resolution(entity: Entity & IDebugEntity) {
-		const {x , y } = entity.movement.positionOfOrigin.getPosition();
-		entity.setDebugEntityPosition(x ,y) ;
-	}
-
 	test(entity: Entity):boolean {
 		if (entity === this.main) return false;
 
 		const a = this.getMovementState(this.main);
 		const b = this.getMovementState(entity);
 
-		if (this.checkCollision({ ...a.currentState() }, {...b.currentState()})) {
-			this.resolution(entity);
+		if (this.checkCollision({ ...a.currentState() }, { ...b.currentState() })) {
+
 			return true;
 		}
 		else if (this.checkCollision({ ...a.nextState() }, { ...b.nextState() })) {
-			this.resolution(entity);
 			return true;
 		}
 		else {

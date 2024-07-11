@@ -3,14 +3,17 @@ import { Enemy } from './_classes/_Enemy';
 import { Entity } from './_classes/_Entity';
 import { KeyObserver } from './_classes/_KeyObserver.ts';
 import { Player } from './_classes/_Player';
-import { Renderer } from './_classes/_Renderer';
+import { RendererSingleton } from './_classes/_Renderer';
 import { Bullet as AttackEntity } from './_classes/_Bullet';
+import { Query } from './_classes/_Query';
+import { GameController } from './_classes/_Controller';
 
 export default class MyGame {
 	private static instance: MyGame | null = null;
 	private canvasContext: CanvasRenderingContext2D | null;
 	public keyObserver: KeyObserver;
-	public renderer: Renderer;
+	public renderer: RendererSingleton;
+	public controller: GameController;
 
 	player: Player;
 	enemies: Enemy[];
@@ -33,12 +36,12 @@ export default class MyGame {
 	}
 
 	makeAttackEntity(origin: Entity, positionDelta: { x: 1 | 0 | -1; y: 1 | 0 | -1 }) {
-		const { x, y } = this.player.movement.positionOfOrigin.getPosition();
-		const { width, height } = this.player.dimensions.get();
+		const { x, y } = origin.movement.positionOfOrigin.getPosition();
+		const { width, height } = origin.dimensions.get();
 
-		const bulletStartSpeed = 2;
+		const bulletStartSpeed = 31;
 
-		if (origin.combat.isReady()) {
+		if (origin.combat.checkIfReadyAndReset()) {
 			this.attackEntities.push(
 				new AttackEntity(
 					{
@@ -72,6 +75,12 @@ export default class MyGame {
 		this.setCanvasSize(500);
 	}
 
+	private queriesFromEntities: Query[] = [];
+
+	public addQuery(query:Query) {
+		this.queriesFromEntities.push(query);
+	}
+
 	public update() {
 		this.keyObserver.getAllKeys().includes('w') ? this.player.moveUp() : null;
 		this.keyObserver.getAllKeys().includes('s') ? this.player.moveDown() : null;
@@ -82,13 +91,23 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeAttackEntity(this.player, { x: -1, y: 0 }) : null;
 		this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeAttackEntity(this.player, { x: 1, y: 0 }) : null;
 
+		/* --- */
+		// make entity
+		this.queriesFromEntities.forEach(query => {
+
+			// !query.state.isDone() && query.execute();
+		});
+
+		// console.log(this.queriesFromEntities.length);
+		/* --- */
+
 		if (this.attackEntities.length > 10) this.attackEntities.shift();
 		/* --- */
 
 		this.player.update([...this.enemies, ...this.attackEntities]);
 
 		this.enemies.forEach((elem) =>
-			elem.update([this.player, ...this.attackEntities, ...this.enemies.filter((enemy) => enemy !== elem)])
+			elem.update([this.player, ...this.attackEntities, ...this.enemies.filter((enemy) => enemy !== elem)]  , this.controller)
 		);
 		this.attackEntities.forEach((elem) =>
 			elem.update([this.player, ...this.enemies, ...this.attackEntities.filter((bullet) => bullet !== elem)])
@@ -116,12 +135,14 @@ export default class MyGame {
 		this.enemies = [
 			new Enemy({ position: { x: 100, y: 100 } }),
 			new Enemy({ position: { x: 600, y: 300 } }),
-			// new Enemy({ position: {x:800 , y:800} }) ,
+			new Enemy({ position: {x:800 , y:500} }) ,
 		];
 		this.keyObserver = KeyObserver.getInstance();
-		this.renderer = Renderer.getInstance();
+		this.renderer = RendererSingleton.getInstance();
 		this.canvasContext = null;
 		this.debugEntity = new DebugEntity({ position: { x: -100, y: -100 } });
+
+		this.controller = new GameController(this);
 	}
 }
 
