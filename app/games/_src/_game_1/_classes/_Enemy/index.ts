@@ -59,6 +59,7 @@ export class Enemy extends Character {
 	
 	public collisionResolution(entity: Entity): void {
 		
+		this.health.applyDamage(this , entity);
 	}
 
 	public ifCollissionTest(entity: Entity): boolean {

@@ -131,7 +131,7 @@ export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavi
 
 			if (this.ifCollissionTest(entity)) {
 				this.collisionResolution(entity);
-				// entity.collisionResolution(this);
+				entity.collisionResolution(this);
 			}
 		});
 

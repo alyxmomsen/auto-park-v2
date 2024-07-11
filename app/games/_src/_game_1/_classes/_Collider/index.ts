@@ -17,13 +17,16 @@ type TCheckCollision = {
 	bottom:number ,
 }
 
+
+
+
 export class Collider {
-	private main: Entity;
+	private origin: Entity;
 
 	test(entity: Entity):boolean {
-		if (entity === this.main) return false;
+		if (entity === this.origin) return false;
 
-		const a = this.getMovementState(this.main);
+		const a = this.getMovementState(this.origin);
 		const b = this.getMovementState(entity);
 
 		if (this.checkCollision({ ...a.currentState() }, { ...b.currentState() })) {
@@ -90,7 +93,7 @@ export class Collider {
 	}
 
 	constructor(mainEntity: Entity, debugEntity?: DebugEntity) {
-		this.main = mainEntity;
+		this.origin = mainEntity;
 	}
 }
 

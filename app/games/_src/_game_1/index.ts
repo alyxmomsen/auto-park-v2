@@ -9,6 +9,7 @@ import { Query } from './_classes/_Query';
 import { GameController } from './_classes/_Controller';
 
 export default class MyGame {
+	
 	private static instance: MyGame | null = null;
 	private canvasContext: CanvasRenderingContext2D | null;
 	public keyObserver: KeyObserver;
@@ -131,12 +132,14 @@ export default class MyGame {
 	}
 
 	private constructor() {
+		const rand = (n: number) => Math.floor(Math.random() * n);
+		const aspectRatio = (size: number) => ({
+			width: () => size * (1024 / 768),
+			height: () => size * (768 / 1024),
+		});
+		const size = 800;
 		this.player = new Player({ position: { x: 300, y: 300 } });
-		this.enemies = [
-			new Enemy({ position: { x: 100, y: 100 } }),
-			new Enemy({ position: { x: 600, y: 300 } }),
-			new Enemy({ position: {x:800 , y:500} }) ,
-		];
+		this.enemies = new Array(50).fill(null).map(elem => new Enemy({ position: { x: rand(aspectRatio(size).width()), y: rand(aspectRatio(size).height()) } }));
 		this.keyObserver = KeyObserver.getInstance();
 		this.renderer = RendererSingleton.getInstance();
 		this.canvasContext = null;

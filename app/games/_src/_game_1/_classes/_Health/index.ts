@@ -40,10 +40,10 @@ export class PlayerHealthBehavior extends HealthBehavior {
 export class EnemyHealthBehavior extends HealthBehavior {
     
     calculateDamageBy(entity:Entity): number {
-        return 0;
+        return this.isReadyToGo() ? entity.damage.get() : 0 ;
     }
     constructor() {
-        super({});
+        super({interval:200});
     }
 }
 
@@ -86,11 +86,8 @@ export class Health {
 
     applyDamage(target: Entity, from: Entity) {
         
-        
-
         const damage = this.healthBehavior.calculateDamageBy(from);
         this.dec(damage);
-        
     }
 
     constructor(value:number , healthBehavior:HealthBehavior) {
