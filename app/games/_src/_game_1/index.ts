@@ -4,7 +4,7 @@ import { Entity } from './_classes/_Entity';
 import { KeyObserver } from './_classes/_KeyObserver.ts';
 import { Player } from './_classes/_Player';
 import { Renderer } from './_classes/_Renderer';
-import { Bullet } from './_classes/Bullet';
+import { Bullet as AttackEntity } from './_classes/_Bullet';
 
 export default class MyGame {
 	private static instance: MyGame | null = null;
@@ -14,7 +14,7 @@ export default class MyGame {
 
 	player: Player;
 	enemies: Enemy[];
-	bullets: Bullet[] = [];
+	attackEntities: AttackEntity[] = [];
 	debugEntity: DebugEntity;
 
 	private setCanvas(canvasContext: CanvasRenderingContext2D) {
@@ -32,15 +32,15 @@ export default class MyGame {
 		this.enemies.push(new Enemy({ position }));
 	}
 
-	makeBullet(entity: Entity, positionDelta: { x: 1 | 0 | -1; y: 1 | 0 | -1 }) {
+	makeAttackEntity(origin: Entity, positionDelta: { x: 1 | 0 | -1; y: 1 | 0 | -1 }) {
 		const { x, y } = this.player.movement.positionOfOrigin.getPosition();
 		const { width, height } = this.player.dimensions.get();
 
 		const bulletStartSpeed = 2;
 
-		if (this.player.combat.isReady()) {
-			this.bullets.push(
-				new Bullet(
+		if (origin.combat.isReady()) {
+			this.attackEntities.push(
+				new AttackEntity(
 					{
 						x:
 							positionDelta.x !== 0
@@ -77,21 +77,21 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('s') ? this.player.moveDown() : null;
 		this.keyObserver.getAllKeys().includes('a') ? this.player.moveLeft() : null;
 		this.keyObserver.getAllKeys().includes('d') ? this.player.moveRight() : null;
-		this.keyObserver.getAllKeys().includes('ArrowUp') ? this.makeBullet(this.player, { x: 0, y: -1 }) : null;
-		this.keyObserver.getAllKeys().includes('ArrowDown') ? this.makeBullet(this.player, { x: 0, y: 1 }) : null;
-		this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeBullet(this.player, { x: -1, y: 0 }) : null;
-		this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeBullet(this.player, { x: 1, y: 0 }) : null;
+		this.keyObserver.getAllKeys().includes('ArrowUp') ? this.makeAttackEntity(this.player, { x: 0, y: -1 }) : null;
+		this.keyObserver.getAllKeys().includes('ArrowDown') ? this.makeAttackEntity(this.player, { x: 0, y: 1 }) : null;
+		this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeAttackEntity(this.player, { x: -1, y: 0 }) : null;
+		this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeAttackEntity(this.player, { x: 1, y: 0 }) : null;
 
-		if (this.bullets.length > 10) this.bullets.shift();
+		if (this.attackEntities.length > 10) this.attackEntities.shift();
 		/* --- */
 
-		this.player.update([...this.enemies, ...this.bullets]);
+		this.player.update([...this.enemies, ...this.attackEntities]);
 
 		this.enemies.forEach((elem) =>
-			elem.update([this.player, ...this.bullets, ...this.enemies.filter((enemy) => enemy !== elem)])
+			elem.update([this.player, ...this.attackEntities, ...this.enemies.filter((enemy) => enemy !== elem)])
 		);
-		this.bullets.forEach((elem) =>
-			elem.update([this.player, ...this.enemies, ...this.bullets.filter((bullet) => bullet !== elem)])
+		this.attackEntities.forEach((elem) =>
+			elem.update([this.player, ...this.enemies, ...this.attackEntities.filter((bullet) => bullet !== elem)])
 		);
 	}
 
@@ -99,7 +99,7 @@ export default class MyGame {
 		if (ctx) {
 			this.player.render(ctx, this.renderer);
 			this.enemies.forEach((elem) => elem.render(ctx, this.renderer));
-			this.bullets.forEach((elem) => elem.render(ctx, this.renderer));
+			this.attackEntities.forEach((elem) => elem.render(ctx, this.renderer));
 		}
 	}
 
