@@ -1,12 +1,11 @@
 export class Damage {
+	private value: number;
 
-    private value: number;
+	get() {
+		return this.value;
+	}
 
-    get() {
-        return this.value;
-    }
-
-    constructor(value:number) {
-        this.value = value;
-    }
+	constructor(value: number) {
+		this.value = value;
+	}
 }

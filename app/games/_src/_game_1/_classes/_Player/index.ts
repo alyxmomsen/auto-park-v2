@@ -3,7 +3,7 @@ import { Color } from '../_Color';
 import { GunCombat } from '../_Combat';
 import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
-import { Entity } from '../_Entity';
+import { collisionBehavior, Entity } from '../_Entity';
 import { Health, PlayerHealthBehavior } from '../_Health';
 import { Position } from '../_Position';
 import { RendererSingleton } from '../_Renderer';
@@ -14,30 +14,29 @@ export class PlayerPostion extends Position {
 	}
 }
 
-export class Player extends Character {
-	fireBehavior() {}
-	public renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void {}
-	public setDebugEntityPosition(x: number, y: number): void { }
-	
-	public collisionResolution(entity: Entity): void {
+export class Player extends Character implements collisionBehavior {
+	//collisionBehavior
+	setHealthWithCollisionBy(): void {
+		
+	}
+	//collisionBehavior
+	setVelocityWithCollisionBy(): void {
+		
+	}
 
-		this.health.applyDamage(this , entity);
+	fireBehavior() {}
+
+	public collisionResolution(entity: Entity): void {
+		
 	}
 
 	public ifCollissionTest(entity: Entity): boolean {
-
-		
 		return this.collider.test(entity);
 	}
 
-	protected beforeUpdated(): void {
-		
-	}
-	
-	protected afterUpdated(controller?:GameController): void {
-		
-	}
+	protected beforeUpdated(): void {}
 
+	protected afterUpdated(controller?: GameController): void {}
 
 	constructor({ position }: { position: { x: number; y: number } }) {
 		super(
@@ -51,7 +50,7 @@ export class Player extends Character {
 			},
 			'player',
 			new Health(100, new PlayerHealthBehavior()),
-			new Damage(10) ,
+			new Damage(10)
 		);
 
 		this.setNoI(); // инкремент счетчика инстанций, для отладки

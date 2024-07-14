@@ -4,7 +4,7 @@ import { Color } from '../_Color';
 import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
 import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
-import { IDebugEntity } from '../_DebugEntity';
+
 import { Dimensions } from '../_Dimensions';
 import { EntityState } from '../_EntityState';
 import { Health } from '../_Health';
@@ -13,6 +13,11 @@ import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
 import { Query } from '../_Query';
 import { RendererSingleton } from '../_Renderer';
+
+export interface collisionBehavior {
+	setHealthWithCollisionBy(): void,
+	setVelocityWithCollisionBy():void,
+}
 
 export interface IEntityProperties {
 	left: number;
@@ -29,14 +34,14 @@ export interface IEntityProperties {
 }
 
 export interface ICollisionResolutionBehavior {
-	collisionResolution(entity:Entity):void
+	collisionResolution(entity: Entity): void;
 }
 
 export interface ICollisionProcessing {
 	ifCollissionTest(entity: Entity): boolean;
 }
 
-export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavior, ICollisionProcessing {
+export abstract class Entity implements ICollisionResolutionBehavior, ICollisionProcessing {
 	public collider: Collider;
 	private static numberOfInstncies: number = 0;
 	protected title: string;
@@ -54,10 +59,7 @@ export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavi
 	public combat: Combat;
 	private combatVariants: Combat[];
 
-	public abstract renderDebug(ctx: CanvasRenderingContext2D, renderer: RendererSingleton): void;
-	public abstract setDebugEntityPosition(x: number, y: number): void;
-
-	abstract collisionResolution(entity: Entity): void 
+	abstract collisionResolution(entity: Entity): void;
 
 	abstract ifCollissionTest(entity: Entity): boolean;
 
@@ -117,18 +119,21 @@ export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavi
 	abstract fireBehavior(): void;
 
 	protected abstract beforeUpdated(): void;
-	protected abstract afterUpdated(controller?:GameController): void;
+	protected abstract afterUpdated(controller?: GameController): void;
 
-	public update(entities: (ICollisionResolutionBehavior & ICollisionProcessing & Entity)[], controller?: GameController) {
-		
+
+
+	public update(
+		entities: (ICollisionResolutionBehavior & ICollisionProcessing & Entity)[],
+		controller?: GameController
+	) {
 		/* --- */
-		
+
 		this.beforeUpdated();
 
 		/* --- */
 
 		entities.forEach((entity) => {
-
 			if (this.ifCollissionTest(entity)) {
 				this.collisionResolution(entity);
 				entity.collisionResolution(this);
@@ -136,17 +141,16 @@ export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavi
 		});
 
 		const health = this.health.get();
-		if(this.title === "player") console.log(health);
+		// if(this.title === "player") console.log(health);
 
 		this.updatePositionByVelocity();
 		this.movement.velocity.collapseBy(0.95);
 
 		/* --- */
-		
+
 		this.afterUpdated(controller);
 
 		/* --- */
-		
 	}
 
 	public render(ctx: CanvasRenderingContext2D, renderer: RendererSingleton) {
@@ -155,14 +159,9 @@ export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavi
 
 		// render the if reload state
 		renderer.renderText(ctx, this);
-		
-		// render health
-		renderer.renderHealthState(ctx , this);
 
-		/* --- */
-		// debug entity
-		this.renderDebug(ctx, renderer);
-		/* --- */
+		// render health
+		renderer.renderHealthState(ctx, this);
 	}
 
 	constructor(
@@ -171,15 +170,15 @@ export abstract class Entity implements IDebugEntity, ICollisionResolutionBehavi
 		color: Color,
 		combat: Combat,
 		movVel: { x: number; y: number },
-		title: string ,
+		title: string,
 		health: Health,
-		damage:Damage ,
+		damage: Damage
 	) {
 		this.dimensions = new Dimensions(dimensions);
 		this.color = color;
 		this.state = new EntityState();
 		this.combat = combat;
-		this.combatVariants = [new NoCombat(),new MinigunCombat() ,new GunCombat() ];
+		this.combatVariants = [new NoCombat(), new MinigunCombat(), new GunCombat()];
 		this.setCombat();
 		this.title = title;
 		this.movement = new Movement({

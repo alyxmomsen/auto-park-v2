@@ -1,5 +1,3 @@
-import { Entity } from "../_Entity";
+import { Entity } from '../_Entity';
 
-export abstract class AttackEntity extends Entity {
-    
-}
+export abstract class AttackEntity extends Entity {}

@@ -1,3 +1,1 @@
-export class HitBox {
-    
-}
+export class HitBox {}

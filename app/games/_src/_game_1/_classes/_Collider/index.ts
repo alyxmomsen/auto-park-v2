@@ -1,7 +1,4 @@
-
 import { Entity, IEntityProperties } from '../_Entity';
-import { DebugEntity, IDebugEntity } from '../_DebugEntity';
-
 
 interface IMovementStateVariant {
 	currentState(): IEntityProperties;
@@ -9,49 +6,41 @@ interface IMovementStateVariant {
 }
 
 type TCheckCollision = {
-	left: number,
-	top: number,
-	width: number,
-	height: number,
-	right: number,
-	bottom:number ,
-}
-
-
-
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+	right: number;
+	bottom: number;
+};
 
 export class Collider {
 	private origin: Entity;
 
-	test(entity: Entity):boolean {
+	test(entity: Entity): boolean {
 		if (entity === this.origin) return false;
 
 		const a = this.getMovementState(this.origin);
 		const b = this.getMovementState(entity);
 
 		if (this.checkCollision({ ...a.currentState() }, { ...b.currentState() })) {
-
 			return true;
-		}
-		else if (this.checkCollision({ ...a.nextState() }, { ...b.nextState() })) {
+		} else if (this.checkCollision({ ...a.nextState() }, { ...b.nextState() })) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 
-	private checkCollision(a:TCheckCollision , b:TCheckCollision):boolean {
+	private checkCollision(a: TCheckCollision, b: TCheckCollision): boolean {
 		if (a.left <= b.right && a.right >= b.left && a.top <= b.bottom && a.bottom >= b.top) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 
 	private getMovementState(entity: Entity): IMovementStateVariant {
-		
 		return {
 			currentState: () => {
 				const position = entity.movement.positionOfOrigin.getPosition();
@@ -69,8 +58,8 @@ export class Collider {
 					subject: entity,
 					vectorModule: Math.sqrt(velocity.x ** 2 + velocity.y ** 2),
 					vectorAngle: Math.atan2(velocity.y, velocity.x) * (180 / Math.PI), // Угол в градусах
-				}
-			}, 
+				};
+			},
 			nextState: () => {
 				const position = entity.movement.positionOfOrigin.getPosition();
 				const velocity = entity.movement.velocity.getState();
@@ -87,12 +76,12 @@ export class Collider {
 					subject: entity,
 					vectorModule: Math.sqrt(velocity.x ** 2 + velocity.y ** 2),
 					vectorAngle: Math.atan2(velocity.y, velocity.x) * (180 / Math.PI), // Угол в градусах
-				}
-			}
-		}
+				};
+			},
+		};
 	}
 
-	constructor(mainEntity: Entity, debugEntity?: DebugEntity) {
+	constructor(mainEntity: Entity) {
 		this.origin = mainEntity;
 	}
 }
@@ -113,7 +102,6 @@ export class Collision {
 	constructor(
 		subjectA: { subj: Entity; state: IEntityProperties },
 		subjectB: { subj: Entity; state: IEntityProperties },
-		debugEntity?: DebugEntity
 	) {
 		this.subjectA = subjectA;
 		this.subjectB = subjectB;

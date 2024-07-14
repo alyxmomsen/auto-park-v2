@@ -1,4 +1,4 @@
-import { DebugEntity } from './_classes/_DebugEntity';
+
 import { Enemy } from './_classes/_Enemy';
 import { Entity } from './_classes/_Entity';
 import { KeyObserver } from './_classes/_KeyObserver.ts';
@@ -7,9 +7,9 @@ import { RendererSingleton } from './_classes/_Renderer';
 import { Bullet as AttackEntity } from './_classes/_Bullet';
 import { Query } from './_classes/_Query';
 import { GameController } from './_classes/_Controller';
+import { Slime } from './_classes/__Slime';
 
 export default class MyGame {
-	
 	private static instance: MyGame | null = null;
 	private canvasContext: CanvasRenderingContext2D | null;
 	public keyObserver: KeyObserver;
@@ -19,7 +19,7 @@ export default class MyGame {
 	player: Player;
 	enemies: Enemy[];
 	attackEntities: AttackEntity[] = [];
-	debugEntity: DebugEntity;
+	things: Entity[];
 
 	private setCanvas(canvasContext: CanvasRenderingContext2D) {
 		this.canvasContext = canvasContext;
@@ -49,13 +49,13 @@ export default class MyGame {
 						x:
 							positionDelta.x !== 0
 								? positionDelta.x > 0
-									? (x + width * positionDelta.x) + 1
+									? x + width * positionDelta.x + 1
 									: x - 1 - width
 								: x + width / 2,
 						y:
 							positionDelta.y !== 0
 								? positionDelta.y > 0
-									? (y + height * positionDelta.y) + 1
+									? y + height * positionDelta.y + 1
 									: y - height - 1
 								: y + height / 2,
 					},
@@ -78,7 +78,7 @@ export default class MyGame {
 
 	private queriesFromEntities: Query[] = [];
 
-	public addQuery(query:Query) {
+	public addQuery(query: Query) {
 		this.queriesFromEntities.push(query);
 	}
 
@@ -89,13 +89,16 @@ export default class MyGame {
 		this.keyObserver.getAllKeys().includes('d') ? this.player.moveRight() : null;
 		this.keyObserver.getAllKeys().includes('ArrowUp') ? this.makeAttackEntity(this.player, { x: 0, y: -1 }) : null;
 		this.keyObserver.getAllKeys().includes('ArrowDown') ? this.makeAttackEntity(this.player, { x: 0, y: 1 }) : null;
-		this.keyObserver.getAllKeys().includes('ArrowLeft') ? this.makeAttackEntity(this.player, { x: -1, y: 0 }) : null;
-		this.keyObserver.getAllKeys().includes('ArrowRight') ? this.makeAttackEntity(this.player, { x: 1, y: 0 }) : null;
+		this.keyObserver.getAllKeys().includes('ArrowLeft')
+			? this.makeAttackEntity(this.player, { x: -1, y: 0 })
+			: null;
+		this.keyObserver.getAllKeys().includes('ArrowRight')
+			? this.makeAttackEntity(this.player, { x: 1, y: 0 })
+			: null;
 
 		/* --- */
 		// make entity
-		this.queriesFromEntities.forEach(query => {
-
+		this.queriesFromEntities.forEach((query) => {
 			// !query.state.isDone() && query.execute();
 		});
 
@@ -105,21 +108,57 @@ export default class MyGame {
 		if (this.attackEntities.length > 10) this.attackEntities.shift();
 		/* --- */
 
-		this.player.update([...this.enemies, ...this.attackEntities]);
+		this.player.update([
+			...this.enemies.filter((elem) => elem.health.get() > 0),
+			...this.attackEntities.filter((elem) => elem.health.get() > 0),
+			...this.things.filter((elem) => elem.health.get() > 0),
+		]);
 
-		this.enemies.forEach((elem) =>
-			elem.update([this.player, ...this.attackEntities, ...this.enemies.filter((enemy) => enemy !== elem)]  , this.controller)
+		this.enemies.forEach(
+			(elem) =>
+				elem.health.get() > 0 &&
+				elem.update(
+					[
+						this.player,
+						...this.attackEntities.filter((elem) => elem.health.get() > 0),
+						...this.enemies.filter((enemy) => enemy !== elem).filter((elem) => elem.health.get() > 0),
+						...this.things.filter((elem) => elem.health.get() > 0),
+					],
+					this.controller
+				)
 		);
-		this.attackEntities.forEach((elem) =>
-			elem.update([this.player, ...this.enemies, ...this.attackEntities.filter((bullet) => bullet !== elem)])
+
+		this.attackEntities.forEach(
+			(elem) =>
+				elem.health.get() > 0 &&
+				elem.update([
+					this.player,
+					...this.enemies.filter((elem) => elem.health.get() > 0),
+					...this.attackEntities.filter((bullet) => bullet !== elem).filter((elem) => elem.health.get() > 0),
+					...this.things.filter((elem) => elem.health.get() > 0),
+				])
 		);
+
+		this.things.forEach(thing => {
+			thing.health.get() > 0 &&
+				thing.update([
+					this.player,
+					...this.enemies.filter((elem) => elem.health.get() > 0),
+					...this.attackEntities.filter((bullet) => bullet !== thing).filter((elem) => elem.health.get() > 0),
+					...this.things.filter(elem => elem !== thing ).filter((elem) => elem.health.get() > 0),
+				])
+		});
+
+		
+
 	}
 
 	public render(ctx: CanvasRenderingContext2D | null) {
 		if (ctx) {
-			this.player.render(ctx, this.renderer);
 			this.enemies.forEach((elem) => elem.render(ctx, this.renderer));
 			this.attackEntities.forEach((elem) => elem.render(ctx, this.renderer));
+			this.things.forEach(elem => elem.render(ctx, this.renderer));
+			this.player.render(ctx, this.renderer);
 		}
 	}
 
@@ -139,13 +178,22 @@ export default class MyGame {
 		});
 		const size = 800;
 		this.player = new Player({ position: { x: 300, y: 300 } });
-		this.enemies = new Array(50).fill(null).map(elem => new Enemy({ position: { x: rand(aspectRatio(size).width()), y: rand(aspectRatio(size).height()) } }));
+		this.enemies = new Array(1)
+			.fill(null)
+			.map(
+				(elem) =>
+					new Enemy({ position: { x: rand(aspectRatio(size).width()), y: rand(aspectRatio(size).height()) } })
+			);
 		this.keyObserver = KeyObserver.getInstance();
 		this.renderer = RendererSingleton.getInstance();
 		this.canvasContext = null;
-		this.debugEntity = new DebugEntity({ position: { x: -100, y: -100 } });
 
 		this.controller = new GameController(this);
+
+		this.things = [
+			new Slime() ,
+			new Slime() ,
+			new Slime() ,
+		]
 	}
 }
-

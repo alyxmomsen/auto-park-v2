@@ -1,13 +1,10 @@
-import { Bullet } from "../_Bullet";
+import { Bullet } from '../_Bullet';
 
 export abstract class Weapon {
-    // damage;
-    // health;
-    // armor;
-    // subject;
+	// damage;
+	// health;
+	// armor;
+	// subject;
 
-
-    constructor() {
-        
-    }
+	constructor() {}
 }

@@ -10,24 +10,37 @@ interface IMovementState {
 }
 
 export class Movement {
-	
 	positionOfOrigin: Position;
 	velocity: MovementVelocity;
 
+	calculateSpeed() {
+		const { x, y } = this.velocity.getState();
+
+		const speed = Math.sqrt(x ** 2 + y ** 2);
+
+		return speed;
+	}
+
 	getCurrentState(): IMovementState {
-		const { x:px, y:py } = this.positionOfOrigin.getPosition();
-		const {x:vx , y:vy } = this.velocity.getState();
+		const { x: px, y: py } = this.positionOfOrigin.getPosition();
+		const { x: vx, y: vy } = this.velocity.getState();
 		return {
-			px ,py , vx , vy
-		}
+			px,
+			py,
+			vx,
+			vy,
+		};
 	}
 
 	getNextState() {
-		const { x:px, y:py } = this.positionOfOrigin.getPosition();
-		const {x:vx , y:vy } = this.velocity.getState();
+		const { x: px, y: py } = this.positionOfOrigin.getPosition();
+		const { x: vx, y: vy } = this.velocity.getState();
 		return {
-			px:px + vx ,py:py+vy , vx , vy
-		}
+			px: px + vx,
+			py: py + vy,
+			vx,
+			vy,
+		};
 	}
 
 	constructor({ position, velocity }: { position: Position; velocity: MovementVelocity }) {

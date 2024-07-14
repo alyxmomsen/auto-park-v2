@@ -14,7 +14,7 @@ export abstract class Combat {
 
 	IsReady(): boolean {
 		const now = Date.now();
-		return now - this.last > this.firerate;	
+		return now - this.last > this.firerate;
 	}
 	constructor(firerate: number) {
 		this.firerate = firerate;

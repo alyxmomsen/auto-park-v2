@@ -1,16 +1,5 @@
-
-
-
 export abstract class EntityCreator {
+	public static create() {}
 
-
-
-    public static create() {
-        
-    } 
-
-    constructor() {
-        
-    }
-
+	constructor() {}
 }
