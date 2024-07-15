@@ -10,6 +10,15 @@ import { RendererSingleton } from "../_Renderer";
 
 export class Slime extends Entity implements collisionBehavior {
 
+    //override 
+    affectToExternalVelocity(): number {
+        return 1.05;         
+    }
+
+    //override 
+    affectToExternalHealth(): number {
+		return 1;
+	}
 
     /* collisionBehavior */
 

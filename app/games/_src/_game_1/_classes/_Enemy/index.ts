@@ -65,6 +65,16 @@ export class Enemy extends Character {
 		return result;
 	}
 
+	//override 
+	affectToExternalVelocity(): number {
+		return 1;
+	}
+
+	//override 
+	affectToExternalHealth(): number {
+		return 1;
+	}
+
 	constructor({ position: { x, y } }: { position: { x: number; y: number } }) {
 		super(
 			new EnemyPosition(x, y),

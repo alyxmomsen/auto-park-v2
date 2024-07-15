@@ -11,7 +11,14 @@ import { RendererSingleton } from '../_Renderer';
 
 export class Bullet extends AttackEntity {
 
-	
+	affectToExternalVelocity(): number {
+		return 1;
+	}
+
+	//override 
+    affectToExternalHealth(): number {
+		return 1.05;
+	}
 
 	public collisionResolution(): void {}
 

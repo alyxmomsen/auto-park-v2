@@ -45,7 +45,7 @@ export class Collider {
 			currentState: () => {
 				const position = entity.movement.positionOfOrigin.getPosition();
 				const velocity = entity.movement.velocity.getState();
-				const dimensions = entity.dimensions.get();
+				const dimensions = entity.hitBox.getDimensions();
 				return {
 					left: position.x,
 					right: position.x + dimensions.width,
@@ -63,7 +63,7 @@ export class Collider {
 			nextState: () => {
 				const position = entity.movement.positionOfOrigin.getPosition();
 				const velocity = entity.movement.velocity.getState();
-				const dimensions = entity.dimensions.get();
+				const dimensions = entity.hitBox.getDimensions();
 				return {
 					left: position.x + velocity.x,
 					right: position.x + dimensions.width + velocity.x,

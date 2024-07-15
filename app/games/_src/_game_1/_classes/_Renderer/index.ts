@@ -1,11 +1,11 @@
 import { Entity } from '../_Entity';
-// why it is the Singleton
+// why is this the Singleton
 export class RendererSingleton {
 	renderSquare(ctx: CanvasRenderingContext2D, entity: Entity) {
 		ctx.fillStyle = entity.color.get();
 
 		const { x, y } = entity.movement.positionOfOrigin.getPosition();
-		const { width, height } = entity.dimensions.get();
+		const { width, height } = entity.hitBox.getDimensions();
 		ctx.fillRect(x, y, width, height);
 	}
 

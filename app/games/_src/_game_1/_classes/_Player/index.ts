@@ -27,7 +27,20 @@ export class Player extends Character implements collisionBehavior {
 	fireBehavior() {}
 
 	public collisionResolution(entity: Entity): void {
+
+		// const velocityDelta = entity.affectToExternalVelocity();
+		const {x, y} = this.movement.velocity.getState();
+		// const newVelocity = {x:x / velocityDelta , y:y / velocityDelta};
+		// this.movement.velocity.set(newVelocity.x, newVelocity.y);
+
+		const {x:evx , y:evy} = entity.movement.velocity.getState();
+		console.log(JSON.stringify({ x: x - evx, y: y - evy }));
 		
+		const { x: epx, y: epy } = entity.movement.positionOfOrigin.getPosition();
+		const { width , height} = this.hitBox.getDimensions();
+
+		this.movement.positionOfOrigin.setPosition({x:epx - width , y:epy - height});
+
 	}
 
 	public ifCollissionTest(entity: Entity): boolean {
@@ -36,7 +49,17 @@ export class Player extends Character implements collisionBehavior {
 
 	protected beforeUpdated(): void {}
 
-	protected afterUpdated(controller?: GameController): void {}
+	protected afterUpdated(controller?: GameController): void { }
+
+	//override 
+	affectToExternalVelocity(): number {
+		return 1;
+	}
+
+	//override 
+    affectToExternalHealth(): number {
+		return 1;
+	}
 
 	constructor({ position }: { position: { x: number; y: number } }) {
 		super(

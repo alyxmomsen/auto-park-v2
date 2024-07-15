@@ -8,6 +8,7 @@ import { Damage } from '../_Damage';
 import { Dimensions } from '../_Dimensions';
 import { EntityState } from '../_EntityState';
 import { Health } from '../_Health';
+import { HitBox } from '../_HitBox';
 import { Movement } from '../_Movement';
 import { MovementVelocity } from '../_MovementVelocity';
 import { Position } from '../_Position';
@@ -17,6 +18,11 @@ import { RendererSingleton } from '../_Renderer';
 export interface collisionBehavior {
 	setHealthWithCollisionBy(): void,
 	setVelocityWithCollisionBy():void,
+}
+
+export interface IAffectByCollision {
+	affectToExternalVelocity(): number;
+	affectToExternalHealth(): number;
 }
 
 export interface IEntityProperties {
@@ -41,7 +47,7 @@ export interface ICollisionProcessing {
 	ifCollissionTest(entity: Entity): boolean;
 }
 
-export abstract class Entity implements ICollisionResolutionBehavior, ICollisionProcessing {
+export abstract class Entity implements ICollisionResolutionBehavior, ICollisionProcessing,  IAffectByCollision {
 	public collider: Collider;
 	private static numberOfInstncies: number = 0;
 	protected title: string;
@@ -52,9 +58,11 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 
 	public movement: Movement;
 
-	public dimensions: Dimensions;
+	// public dimensions: Dimensions;
 	public color: Color;
 	public state: EntityState;
+
+	public hitBox: HitBox;
 
 	public combat: Combat;
 	private combatVariants: Combat[];
@@ -62,6 +70,9 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 	abstract collisionResolution(entity: Entity): void;
 
 	abstract ifCollissionTest(entity: Entity): boolean;
+
+	abstract affectToExternalVelocity(): number;
+	abstract affectToExternalHealth(): number;
 
 	public setNoI() {
 		Entity.numberOfInstncies += 1;
@@ -166,15 +177,15 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 
 	constructor(
 		position: Position,
-		dimensions: IDimensions,
+		hitBoxDimensions: IDimensions,
 		color: Color,
 		combat: Combat,
 		movVel: { x: number; y: number },
 		title: string,
 		health: Health,
-		damage: Damage
+		damage: Damage, 
 	) {
-		this.dimensions = new Dimensions(dimensions);
+		// this.dimensions = new Dimensions(hitBoxDimensions);
 		this.color = color;
 		this.state = new EntityState();
 		this.combat = combat;
@@ -188,5 +199,6 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 		this.health = health;
 		this.damage = damage;
 		this.collider = new Collider(this);
+		this.hitBox = new HitBox(hitBoxDimensions.width , hitBoxDimensions.height);
 	}
 }
