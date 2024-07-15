@@ -8,28 +8,26 @@ interface IMovementStateVariant {
 type TCheckCollision = {
 	left: number;
 	top: number;
-	width: number;
-	height: number;
+	// width: number;
+	// height: number;
 	right: number;
 	bottom: number;
 };
+
+
+export interface IBoundingRectangle {
+	left: number,
+	right: number,
+	bottom: number,
+	top:number ,
+}
 
 export class Collider {
 	private origin: Entity;
 
 	test(entity: Entity): boolean {
-		if (entity === this.origin) return false;
-
-		const a = this.getMovementState(this.origin);
-		const b = this.getMovementState(entity);
-
-		if (this.checkCollision({ ...a.currentState() }, { ...b.currentState() })) {
-			return true;
-		} else if (this.checkCollision({ ...a.nextState() }, { ...b.nextState() })) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		return this.checkCollision(this.origin.getBoundingRect(), entity.getBoundingRect());
 	}
 
 	private checkCollision(a: TCheckCollision, b: TCheckCollision): boolean {
@@ -44,7 +42,7 @@ export class Collider {
 		return {
 			currentState: () => {
 				const position = entity.movement.positionOfOrigin.getPosition();
-				const velocity = entity.movement.velocity.getState();
+				const velocity = entity.movement.velocity.getXY();
 				const dimensions = entity.hitBox.getDimensions();
 				return {
 					left: position.x,
@@ -62,7 +60,7 @@ export class Collider {
 			},
 			nextState: () => {
 				const position = entity.movement.positionOfOrigin.getPosition();
-				const velocity = entity.movement.velocity.getState();
+				const velocity = entity.movement.velocity.getXY();
 				const dimensions = entity.hitBox.getDimensions();
 				return {
 					left: position.x + velocity.x,

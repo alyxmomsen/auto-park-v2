@@ -5,6 +5,7 @@ import { Damage } from "../_Damage";
 import { EnemyPosition } from "../_Enemy";
 import { collisionBehavior, Entity } from "../_Entity";
 import { EnemyHealthBehavior, Health } from "../_Health";
+import { HitBox } from "../_HitBox";
 import {  } from "../_Player";
 import { RendererSingleton } from "../_Renderer";
 
@@ -40,7 +41,7 @@ export class Slime extends Entity implements collisionBehavior {
         
     }
 
-    ifCollissionTest(entity: Entity): boolean {
+    ifCollissionByNextPositionWith(entity: Entity): boolean {
         return false;
     }
 
@@ -71,7 +72,8 @@ export class Slime extends Entity implements collisionBehavior {
 			},
 			'enemy',
 			new Health(100, new EnemyHealthBehavior()),
-			new Damage(10)
+            new Damage(10),
+            new HitBox(200 , 200 , false)
         );
     }
 }

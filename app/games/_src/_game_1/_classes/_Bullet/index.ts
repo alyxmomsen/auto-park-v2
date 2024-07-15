@@ -6,6 +6,7 @@ import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
 import { Entity } from '../_Entity';
 import { BulletHealthBehavior as BulletHealthBehavior, Health } from '../_Health';
+import { HitBox } from '../_HitBox';
 import { Position } from '../_Position';
 import { RendererSingleton } from '../_Renderer';
 
@@ -22,7 +23,7 @@ export class Bullet extends AttackEntity {
 
 	public collisionResolution(): void {}
 
-	public ifCollissionTest(entity: Entity): boolean {
+	public ifCollissionByNextPositionWith(entity: Entity): boolean {
 		return false;
 	}
 
@@ -41,7 +42,8 @@ export class Bullet extends AttackEntity {
 			movVelo,
 			'bullet',
 			new Health(100, new BulletHealthBehavior()),
-			new Damage(20)
+			new Damage(20),
+			new HitBox(25, 25 ,true) ,
 		);
 
 	}

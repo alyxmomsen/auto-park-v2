@@ -5,18 +5,23 @@ import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
 import { Entity } from '../_Entity';
 import { EnemyHealthBehavior, Health } from '../_Health';
+import { HitBox } from '../_HitBox';
 import { Position } from '../_Position';
 import { RendererSingleton } from '../_Renderer';
 
 export class EnemyPosition extends Position {
 	constructor(x: number, y: number) {
 		super({ x, y });
-	}
+	}	
 }
 
 export class Enemy extends Character {
 
-	fireBehavior() {}
+	fireBehavior() { }
+	
+	checkCollision({bottom , top , left , right,  entity}:{left:number , right:number , top:number , bottom:number , entity:Entity}): boolean {
+		return false;
+	}
 
 	protected afterUpdated(controller?: GameController): void {
 		/* --- */
@@ -46,21 +51,10 @@ export class Enemy extends Character {
 	protected beforeUpdated(): void {}
 
 	public collisionResolution(entity: Entity): void {
-		const entity_speed = entity.movement.calculateSpeed();
-		const mySpeed = this.movement.calculateSpeed();
-
-		const { x: evx, y: evy } = entity.movement.velocity.getState();
-		const { x: vx, y: vy } = this.movement.velocity.getState();
-
-		const x = vx - evx;
-		const y = vy - evy;
-
-		const relSpeed = Math.sqrt(x ** 2 + y ** 2);
-
-		this.health.dec(0.01 * relSpeed);
+		
 	}
 
-	public ifCollissionTest(entity: Entity): boolean {
+	public ifCollissionByNextPositionWith(entity: Entity): boolean {
 		const result = this.collider.test(entity);
 		return result;
 	}
@@ -87,7 +81,8 @@ export class Enemy extends Character {
 			},
 			'enemy',
 			new Health(10, new EnemyHealthBehavior()),
-			new Damage(10)
+			new Damage(10),
+			new HitBox(50 , 50 , true),
 		);
 	}
 }

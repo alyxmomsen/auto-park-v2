@@ -1,5 +1,5 @@
 import { IDimensions } from '../../types';
-import { Collider } from '../_Collider';
+import { Collider, IBoundingRectangle } from '../_Collider';
 import { Color } from '../_Color';
 import { Combat, GunCombat, MinigunCombat, NoCombat } from '../_Combat';
 import { GameController } from '../_Controller';
@@ -44,7 +44,8 @@ export interface ICollisionResolutionBehavior {
 }
 
 export interface ICollisionProcessing {
-	ifCollissionTest(entity: Entity): boolean;
+	ifCollissionByNextPositionWith(entity: Entity): boolean;
+	checkCollision({bottom , top , left , right,  entity}:{left:number , right:number , top:number , bottom:number , entity:Entity}): boolean;
 }
 
 export abstract class Entity implements ICollisionResolutionBehavior, ICollisionProcessing,  IAffectByCollision {
@@ -69,10 +70,38 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 
 	abstract collisionResolution(entity: Entity): void;
 
-	abstract ifCollissionTest(entity: Entity): boolean;
+	// override
+	abstract ifCollissionByNextPositionWith(entity: Entity): boolean;
+
+	// override
+	abstract checkCollision({bottom , top , left , right,  entity}:{left:number , right:number , top:number , bottom:number , entity:Entity}): boolean;
 
 	abstract affectToExternalVelocity(): number;
 	abstract affectToExternalHealth(): number;
+
+
+	getBoundingRect(): IBoundingRectangle {
+		const {width , height } = this.hitBox.getDimensions();
+		const {px:x , py:y } = this.movement.getCurrentState();
+		return {
+			left: x,
+			right: x + width,
+			top: y,
+			bottom:y + height ,
+		}
+	}
+
+	getNextPositionBoundingRect(): IBoundingRectangle {
+		const {width , height } = this.hitBox.getDimensions();
+		const { px: x, py: y } = this.movement.getCurrentState();
+		const {x:vx , y:vy } = this.movement.velocity.getXY();
+		return {
+			left: x + vx,
+			right: x + vx + width,
+			top: y + vy,
+			bottom:y + vy + height ,
+		}
+	}
 
 	public setNoI() {
 		Entity.numberOfInstncies += 1;
@@ -107,7 +136,7 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 
 	private updatePositionByVelocity() {
 		const { x, y } = this.movement.positionOfOrigin.getPosition();
-		const { x: vX, y: vY } = this.movement.velocity.getState();
+		const { x: vX, y: vY } = this.movement.velocity.getXY();
 		this.movement.positionOfOrigin.setPosition({ x: x + vX, y: y + vY });
 	}
 
@@ -145,9 +174,19 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 		/* --- */
 
 		entities.forEach((entity) => {
-			if (this.ifCollissionTest(entity)) {
-				this.collisionResolution(entity);
-				entity.collisionResolution(this);
+			if (this.ifCollissionByNextPositionWith(entity)) {
+
+				if (this.hitBox.isRigidBody() && !entity.hitBox.isRigidBody()) {
+
+				
+					
+				}
+
+				// set a object position
+				//set b object postition
+
+				// this.collisionResolution(entity);
+				// entity.collisionResolution(this);
 			}
 		});
 
@@ -183,7 +222,8 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 		movVel: { x: number; y: number },
 		title: string,
 		health: Health,
-		damage: Damage, 
+		damage: Damage,
+		hitBox:HitBox,
 	) {
 		// this.dimensions = new Dimensions(hitBoxDimensions);
 		this.color = color;
@@ -199,6 +239,6 @@ export abstract class Entity implements ICollisionResolutionBehavior, ICollision
 		this.health = health;
 		this.damage = damage;
 		this.collider = new Collider(this);
-		this.hitBox = new HitBox(hitBoxDimensions.width , hitBoxDimensions.height);
+		this.hitBox = hitBox;
 	}
 }

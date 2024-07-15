@@ -38,7 +38,7 @@ export default class MyGame {
 
 	makeAttackEntity(origin: Entity, positionDelta: { x: 1 | 0 | -1; y: 1 | 0 | -1 }) {
 		const { x, y } = origin.movement.positionOfOrigin.getPosition();
-		const { width, height } = origin.dimensions.get();
+		const { width, height } = origin.hitBox.getDimensions();
 
 		const bulletStartSpeed = 31;
 

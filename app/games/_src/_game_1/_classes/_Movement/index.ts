@@ -13,8 +13,19 @@ export class Movement {
 	positionOfOrigin: Position;
 	velocity: MovementVelocity;
 
+	calculateNextPositionByVelocity() {
+
+		const { x:px , y:py } = this.positionOfOrigin.getPosition();
+		const { x:vx , y:vy } = this.velocity.getXY();
+
+		return {
+			x: px + vx,
+			y:py + vy ,
+		}
+	}
+
 	calculateSpeed() {
-		const { x, y } = this.velocity.getState();
+		const { x, y } = this.velocity.getXY();
 
 		const speed = Math.sqrt(x ** 2 + y ** 2);
 
@@ -23,7 +34,7 @@ export class Movement {
 
 	getCurrentState(): IMovementState {
 		const { x: px, y: py } = this.positionOfOrigin.getPosition();
-		const { x: vx, y: vy } = this.velocity.getState();
+		const { x: vx, y: vy } = this.velocity.getXY();
 		return {
 			px,
 			py,
@@ -32,14 +43,12 @@ export class Movement {
 		};
 	}
 
-	getNextState() {
+	getNextPosition() {
 		const { x: px, y: py } = this.positionOfOrigin.getPosition();
-		const { x: vx, y: vy } = this.velocity.getState();
+		const { x: vx, y: vy } = this.velocity.getXY();
 		return {
-			px: px + vx,
-			py: py + vy,
-			vx,
-			vy,
+			x: px + vx,
+			y: py + vy,
 		};
 	}
 

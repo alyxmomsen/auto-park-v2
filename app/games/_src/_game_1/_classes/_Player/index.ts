@@ -5,6 +5,7 @@ import { GameController } from '../_Controller';
 import { Damage } from '../_Damage';
 import { collisionBehavior, Entity } from '../_Entity';
 import { Health, PlayerHealthBehavior } from '../_Health';
+import { HitBox } from '../_HitBox';
 import { Position } from '../_Position';
 import { RendererSingleton } from '../_Renderer';
 
@@ -28,23 +29,42 @@ export class Player extends Character implements collisionBehavior {
 
 	public collisionResolution(entity: Entity): void {
 
-		// const velocityDelta = entity.affectToExternalVelocity();
-		const {x, y} = this.movement.velocity.getState();
-		// const newVelocity = {x:x / velocityDelta , y:y / velocityDelta};
-		// this.movement.velocity.set(newVelocity.x, newVelocity.y);
+		// this.health.applyDamage
 
-		const {x:evx , y:evy} = entity.movement.velocity.getState();
-		console.log(JSON.stringify({ x: x - evx, y: y - evy }));
-		
-		const { x: epx, y: epy } = entity.movement.positionOfOrigin.getPosition();
-		const { width , height} = this.hitBox.getDimensions();
+		// this.health.
 
-		this.movement.positionOfOrigin.setPosition({x:epx - width , y:epy - height});
+		// health
+		// velocity
 
 	}
 
-	public ifCollissionTest(entity: Entity): boolean {
-		return this.collider.test(entity);
+	public ifCollissionByNextPositionWith(entity: Entity): boolean {
+
+		const aRect = this.getNextPositionBoundingRect();
+		const bRect = entity.getNextPositionBoundingRect();
+		
+		if (aRect.left <= bRect.right && aRect.right >= bRect.left && aRect.top <= bRect.bottom && aRect.bottom >= bRect.top) {
+			
+			return true;
+		}
+		else {
+
+			return false;
+		}
+
+	}
+
+	checkCollision({bottom , top , left , right,  entity}:{left:number , right:number , top:number , bottom:number , entity:Entity}): boolean {
+		const entityRect = this.getNextPositionBoundingRect();
+		
+		if (left <= entityRect.right && right >= entityRect.left && top <= entityRect.bottom && bottom >= entityRect.top) {
+			
+			return true;
+		}
+		else {
+
+			return false;
+		}
 	}
 
 	protected beforeUpdated(): void {}
@@ -73,7 +93,8 @@ export class Player extends Character implements collisionBehavior {
 			},
 			'player',
 			new Health(100, new PlayerHealthBehavior()),
-			new Damage(10)
+			new Damage(10),
+			new HitBox(50 , 50 , true)
 		);
 
 		this.setNoI(); // инкремент счетчика инстанций, для отладки

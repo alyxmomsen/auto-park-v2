@@ -3,7 +3,7 @@ export class MovementVelocity {
 	private y: number;
 	private delta: number = 0.2;
 
-	getState() {
+	getXY() {
 		const { x, y, delta } = this;
 		return {
 			x,
